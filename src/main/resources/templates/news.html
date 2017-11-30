@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8" />
+        <title>Iltapulu</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    </head>
+    <body>
+        <div th:replace="fragments/header :: header">
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+
+
+        <ul>
+            <li th:each="n:${news}">
+                <span  th:text="${n.title}"/>
+                <br/>
+                <span  th:text="${n.ingress}"/>
+                <br/>
+                <span  th:text="${n.text}"/>
+                <br/>
+                <ul>
+                    <li th:each="c:${n.categories}" th:text="${c.name}"/>                    
+                </ul>
+                <br/>
+                <img th:src="@{/news/{id}/img(id=${n.id})}" width="200"/>
+                <br/>
+                <span>Julkaistu: </span>
+                <span th:text="${n.published}"/>
+                <br/>
+                <span>Kirjoittajat: </span>
+                <ul>
+                    <li th:each="w:${n.writers}" th:text="${w.name}"/>
+                </ul>
+            </li>
+        </ul>
+    </body>
+
+</html>

@@ -1,17 +1,36 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
     <head>
         <meta charset="UTF-8" />
         <title>Iltapulu</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
     </head>
     <body>
+        <div th:replace="fragments/header :: header"/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
 
-        <h2>Iltapulu</h2>
 
+        <form method="POST" action="/" enctype="multipart/form-data" id="addNews">
+            <input style="text" name="title" placeholder="Title"/><br/>
+            <input style="text" name="ingress" placeholder="Ingress"/><br/>
+                <textarea rows="4" cols="5" name="text"></textarea>
+            <input style="text" name="category" placeholder="Category"/>
+            <p>Image</p>
+            <input type="file" name="img" id="file"/>
+            <input type="submit" value="add news!"/>
+            
+        </form>
         
-        <p>
-            Tähän tulee juttuja
-        </p>
+        <select name="writers" form="addNews" multiple="true">
+            <option th:each="w:${writers}" th:value="${w.id}" th:text="${w.name}">name</option>
+        </select>
     </body>
 
 </html>

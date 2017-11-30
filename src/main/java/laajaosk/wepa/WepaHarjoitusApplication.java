@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class WepaHarjoitusApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(WepaHarjoitusApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(WepaHarjoitusApplication.class, args);
+    }
 }

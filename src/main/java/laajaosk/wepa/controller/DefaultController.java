@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class DefaultController {
 
 
-    @GetMapping("/")
+    @GetMapping("*")
     public String list(Model model) {
         return "index";
     }
