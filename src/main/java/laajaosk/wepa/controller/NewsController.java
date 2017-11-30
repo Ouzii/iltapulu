@@ -35,9 +35,6 @@ public class NewsController {
 
     @GetMapping("/")
     public String index(Model model) {
-        Writer p = new Writer();
-        p.setName("Pekka");
-        writerRepository.save(p);
         model.addAttribute("writers", writerRepository.findAll());
         return "index";
     }
