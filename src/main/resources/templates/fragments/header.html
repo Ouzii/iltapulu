@@ -22,20 +22,11 @@
             <li>
               <a href="#" th:href="@{/news}">Uutiset</a>
             </li>
-            <li>
-              <a href="#" th:href="@{/news/domestic}">Kotimaa</a>
+            <li th:each="category:${categories}">
+                <a href="#" th:href="@{/news/categories/{name}(name=${category.name})}" th:text="${category.name}">Kategoria</a>
             </li>
             <li>
-              <a href="#" th:href="@{/news/foreign}">Ulkomaat</a>
-            </li>
-            <li>
-              <a href="#" th:href="@{/news/entertainment}">Viihde</a>
-            </li>
-            <li>
-              <a href="#" th:href="@{/news/sports}">Urheilu</a>
-            </li>
-            <li>
-              <a href="#" th:href="@{/writers}">Kirjoittajat</a>
+              <a href="#" th:href="@{/moderator}">Ylläpito</a>
             </li>
           </ul>
         </div>

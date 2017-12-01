@@ -16,21 +16,32 @@
         <br/>
         <br/>
 
-
-        <form method="POST" action="/" enctype="multipart/form-data" id="addNews">
-            <input style="text" name="title" placeholder="Title"/><br/>
-            <input style="text" name="ingress" placeholder="Ingress"/><br/>
-                <textarea rows="4" cols="5" name="text"></textarea>
-            <input style="text" name="category" placeholder="Category"/>
-            <p>Image</p>
-            <input type="file" name="img" id="file"/>
-            <input type="submit" value="add news!"/>
-            
-        </form>
-        
-        <select name="writers" form="addNews" multiple="true">
-            <option th:each="w:${writers}" th:value="${w.id}" th:text="${w.name}">name</option>
-        </select>
+        <ul>
+            <li th:each="aNew:${news}">
+                <h3 th:text="${aNew.title}">Otsikko</h3>
+                <br/>
+                <h4 th:text="${aNew.ingress}">Ingressi</h4>
+                <br/>
+                <img th:src="@{/news/{id}/img(id=${aNew.id})}" width="200"/>
+                <br/>
+                <br/>
+                <p  th:text="${aNew.text}"/>
+                <br/>
+                <br/>
+                <br/>
+                <label>Julkaistu:</label>
+                <span th:text="${aNew.published}"/>
+                <br/>
+                <label>Kirjoittajat:</label><br/>
+                <ul>
+                    <li th:each="writer:${aNew.writers}" th:text="${writer.name}"/>
+                </ul><br/>
+                <label>Kategoriat:</label>
+                <ul>
+                    <li th:each="category:${aNew.categories}" th:text="${category.name}"/>                    
+                </ul>
+            </li>
+        </ul>
     </body>
 
 </html>

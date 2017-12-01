@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package laajaosk.wepa.controller;
 
+import laajaosk.wepa.domain.Category;
 import laajaosk.wepa.domain.Writer;
+import laajaosk.wepa.repository.CategoryRepository;
 import laajaosk.wepa.repository.WriterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,23 +12,35 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class WriterController {
+public class ModeratorController {
     
     @Autowired
     private WriterRepository writerRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
     
-    @GetMapping("/writers")
+    @GetMapping("/moderator")
     public String list(Model model) {
         model.addAttribute("writers", writerRepository.findAll());
-        return "writers";
+        model.addAttribute("categories", categoryRepository.findAll());
+        return "moderator";
     } 
     
-    @PostMapping("writers")
-    public String add(@RequestParam String name) {
+    @PostMapping("/moderator/writer")
+    public String addWriter(@RequestParam String name) {
         Writer w = new Writer();
         w.setName(name);
         writerRepository.save(w);
         
-        return "redirect:/writers";
+        return "redirect:/moderator";
+    }
+    
+    @PostMapping("/moderator/category")
+    public String addCategory(@RequestParam String name) {
+        Category c = new Category();
+        c.setName(name);
+        categoryRepository.save(c);
+        
+        return "redirect:/moderator";
     }
 }

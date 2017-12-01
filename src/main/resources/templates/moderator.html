@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8" />
+        <title>Iltapulu</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    </head>
+    <body>
+        <div th:replace="fragments/header :: header"/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+
+
+        <form method="POST" action="/moderator/news" enctype="multipart/form-data" id="addNews">
+            <label>Otsikko</label><br/>
+            <input style="text" name="title" placeholder="Title"/><br/>
+            <label>Ingressi</label><br/>
+            <input style="text" name="ingress" placeholder="Ingress"/><br/>
+            <label>Leipäteksti</label><br/>
+            <textarea rows="10" cols="80" name="text"></textarea><br/>
+            <label>Kuva</label><br/>
+            <input type="file" name="img" id="file"/><br/>
+
+
+        
+
+        <label>Kirjoittajat</label><br/>
+        <select name="writers" form="addNews" multiple="true">
+            <option th:each="w:${writers}" th:value="${w.id}" th:text="${w.name}">name</option>
+        </select><br/>
+        <label>Kategoriat</label><br/>
+        <select name="categories" form="addNews" multiple="true">
+            <option th:each="category:${categories}" th:value="${category.id}" th:text="${category.name}">name</option>
+        </select><br/><br/>
+        <input type="submit" value="add news!"/>
+        </form>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        
+
+        <label>Kirjoittajat:</label>
+        <ul>
+            <li th:each="w:${writers}">
+                <span  th:text="${w.name}"/>
+                <br/>
+            </li>
+        </ul>
+
+        <form method="POST" action="/moderator/writer">
+            <input type="text" name="name" placeholder="Anna nimi"/>
+            <input type="submit" value="Luo"/>
+        </form>
+
+        <br/>
+        <br/>
+        <label>Kategoriat:</label>
+        <ul>
+            <li th:each="category:${categories}">
+                <span  th:text="${category.name}"/>
+                <br/>
+            </li>
+        </ul>
+
+        <form method="POST" action="/moderator/category">
+            <input type="text" name="name" placeholder="Anna nimi"/>
+            <input type="submit" value="Luo"/>
+        </form>
+        
+        
+        
+    </body>
+
+</html>

@@ -16,16 +16,8 @@
         <br/>
         <br/>
         <br/>
-        <form method="get" th:action="@{/news/{title}/listByDate(title=${title})}">
-            <input type="submit" value="Listaa tuoreimmat ensin"/>
-        </form>
-        <form method="get" th:action="@{/news/{title}/listByViews(title=${title})}">
-            <input type="submit" value="Listaa suosituimmat ensin"/>
-        </form>
 
-        <ul>
-            <li th:each="aNew:${news}">
-                <a href="#" th:href="@{/news/{id}(id=${aNew.id})}" th:text="${aNew.title}">Otsikko</a>
+                <h3 th:text="${aNew.title}">Otsikko</h3>
                 <br/>
                 <h4 th:text="${aNew.ingress}">Ingressi</h4>
                 <br/>
@@ -47,8 +39,6 @@
                 <ul>
                     <li th:each="category:${aNew.categories}" th:text="${category.name}"/>                    
                 </ul>
-            </li>
-        </ul>
     </body>
 
 </html>
