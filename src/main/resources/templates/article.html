@@ -39,6 +39,11 @@
                 <ul>
                     <li th:each="category:${aNew.categories}" th:text="${category.name}"/>                    
                 </ul>
+                
+                
+                <form th:method="DELETE" th:action="@{/news/{id}(id=${aNew.id})}">
+                    <input type="submit" value="poista"/>
+                </form>
     </body>
 
 </html>

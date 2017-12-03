@@ -6,6 +6,7 @@ import java.util.List;
 import laajaosk.wepa.domain.Category;
 import laajaosk.wepa.domain.FileObject;
 import laajaosk.wepa.domain.News;
+import laajaosk.wepa.domain.Writer;
 import laajaosk.wepa.repository.CategoryRepository;
 import laajaosk.wepa.repository.FileObjectRepository;
 import laajaosk.wepa.repository.NewsRepository;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -111,5 +113,26 @@ public class NewsController {
     @ResponseBody
     public byte[] jpegContent(@PathVariable Long id) {
         return fileRepository.findByNews(newsRepository.getOne(id)).getContent();
+    }
+    
+    
+    @DeleteMapping("/news/{id}")
+    public String delete(@PathVariable Long id) {
+        News aNew = newsRepository.getOne(id);
+        for (Category category : aNew.getCategories()) {
+            Category c = categoryRepository.getOne(category.getId());
+            List<News> n = c.getNews();
+            n.remove(aNew);
+            c.setNews(n);
+        }
+        for (Writer writer : aNew.getWriters()) {
+            Writer w = writerRepository.getOne(writer.getId());
+            List<News> n = w.getNews();
+            n.remove(aNew);
+            w.setNews(n);
+        }
+        fileRepository.delete(fileRepository.findByNews(aNew));
+        newsRepository.delete(aNew);
+        return "redirect:/";
     }
 }
