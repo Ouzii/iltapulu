@@ -18,7 +18,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 public class News extends AbstractPersistable<Long> {
     
     private String title;
-    private int views = 0;
+//    private int views = 0;
     
     @ManyToMany
     private List<Category> categories = new ArrayList<>();
