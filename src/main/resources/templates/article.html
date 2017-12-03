@@ -39,7 +39,7 @@
                 <ul>
                     <li th:each="category:${aNew.categories}" th:text="${category.name}"/>                    
                 </ul>
-                
+                <label>Luettu: </label><span th:text="${aNew.views}"/>
                 
                 <form th:method="DELETE" th:action="@{/news/{id}(id=${aNew.id})}">
                     <input type="submit" value="poista"/>

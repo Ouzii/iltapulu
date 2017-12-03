@@ -19,9 +19,9 @@
         <form method="get" th:action="@{/news/{title}/listByDate(title=${title})}">
             <input type="submit" value="Listaa tuoreimmat ensin"/>
         </form>
-<!--        <form method="get" th:action="@{/news/{title}/listByViews(title=${title})}">
+        <form method="get" th:action="@{/news/{title}/listByViews(title=${title})}">
             <input type="submit" value="Listaa suosituimmat ensin"/>
-        </form>-->
+        </form>
 
         <ul>
             <li th:each="aNew:${news}">
