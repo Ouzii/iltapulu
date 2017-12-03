@@ -25,7 +25,7 @@
 
         <ul>
             <li th:each="aNew:${news}">
-                <a href="#" th:href="@{/news/{id}(id=${aNew.id})}" th:text="${aNew.title}">Otsikko</a>
+                <h2><a href="#" th:href="@{/news/{id}(id=${aNew.id})}" th:text="${aNew.title}">Otsikko</a></h2>
                 <br/>
                 <h4 th:text="${aNew.ingress}">Ingressi</h4>
                 <br/>

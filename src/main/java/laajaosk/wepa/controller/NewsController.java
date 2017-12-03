@@ -45,10 +45,11 @@ public class NewsController {
         model.addAttribute("news", newsRepository.findAll(pageable));
         return "index";
     }
-    
+
     @GetMapping("/news/{id}")
     public String show(Model model, @PathVariable Long id) {
         model.addAttribute("aNew", newsRepository.getOne(id));
+        model.addAttribute("categories", categoryRepository.findAll());
         return "article";
     }
 
@@ -56,8 +57,10 @@ public class NewsController {
     public String list(Model model) {
         model.addAttribute("news", newsRepository.findAll());
         model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("title", "uutiset");
         return "news";
     }
+
     @GetMapping("/news/categories/{name}")
     public String listByCategory(Model model, @PathVariable String name) {
         ArrayList<Category> categories = new ArrayList<>();
@@ -67,12 +70,22 @@ public class NewsController {
         model.addAttribute("title", name);
         return "news";
     }
-    
+
     @GetMapping("/news/{title}/listByDate")
     public String listByDate(Model model, @PathVariable String title) {
         ArrayList<Category> categories = new ArrayList<>();
         categories.add(categoryRepository.findByName(title));
         model.addAttribute("news", newsRepository.findByCategories(categories, new Sort(Sort.Direction.DESC, "published")));
+        model.addAttribute("categories", categoryRepository.findAll());
+        return "news";
+    }
+
+    @GetMapping("/news/{title}/listByViews")
+    public String listByViews(Model model, @PathVariable String title) {
+        ArrayList<Category> categories = new ArrayList<>();
+        categories.add(categoryRepository.findByName(title));
+        model.addAttribute("news", newsRepository.findByCategories(categories, new Sort(Sort.Direction.DESC, "views")));
+        model.addAttribute("categories", categoryRepository.findAll());
         return "news";
     }
 
@@ -91,8 +104,7 @@ public class NewsController {
             news.getCategories().add(categoryRepository.getOne(category));
             categoryRepository.getOne(category).getNews().add(news);
         }
-        
-        
+
         newsRepository.save(news);
         FileObject fo = new FileObject();
 
@@ -101,12 +113,12 @@ public class NewsController {
         fo.setContentLength(file.getSize());
         fo.setContentType(file.getContentType());
         fo.setNews(news);
-        
+
         fileRepository.save(fo);
 
         return "redirect:/moderator";
     }
-    
+
     @GetMapping(path = "/news/{id}/img", produces = "image/jpeg")
     @ResponseBody
     public byte[] jpegContent(@PathVariable Long id) {
