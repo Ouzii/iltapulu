@@ -29,7 +29,7 @@ public class ModeratorController {
     @PostMapping("/moderator/writer")
     public String addWriter(@RequestParam String name) {
         Writer w = new Writer();
-        w.setName(name);
+        w.setName(name.toLowerCase());
         writerRepository.save(w);
         
         return "redirect:/moderator";
@@ -38,7 +38,7 @@ public class ModeratorController {
     @PostMapping("/moderator/category")
     public String addCategory(@RequestParam String name) {
         Category c = new Category();
-        c.setName(name);
+        c.setName(name.toLowerCase());
         categoryRepository.save(c);
         
         return "redirect:/moderator";

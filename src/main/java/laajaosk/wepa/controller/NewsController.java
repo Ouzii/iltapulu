@@ -50,7 +50,10 @@ public class NewsController {
 
     @GetMapping("/news/{id}")
     public String show(Model model, @PathVariable Long id) {
-        model.addAttribute("aNew", newsRepository.getOne(id));
+        News aNew = newsRepository.getOne(id);
+        aNew.setViews(aNew.getViews()+1);
+        newsRepository.save(aNew);
+        model.addAttribute("aNew", aNew);
         model.addAttribute("categories", categoryRepository.findAll());
         return "article";
     }
@@ -76,7 +79,7 @@ public class NewsController {
     @GetMapping("/news/{title}/listByDate")
     public String listByDate(Model model, @PathVariable String title) {
         ArrayList<Category> categories = new ArrayList<>();
-        categories.add(categoryRepository.findByName(title));
+        categories.add(categoryRepository.findByName(title.toLowerCase()));
         model.addAttribute("news", newsRepository.findByCategories(categories, new Sort(Sort.Direction.DESC, "published")));
         model.addAttribute("categories", categoryRepository.findAll());
         return "news";
@@ -85,7 +88,7 @@ public class NewsController {
     @GetMapping("/news/{title}/listByViews")
     public String listByViews(Model model, @PathVariable String title) {
         ArrayList<Category> categories = new ArrayList<>();
-        categories.add(categoryRepository.findByName(title));
+        categories.add(categoryRepository.findByName(title.toLowerCase()));
         model.addAttribute("news", newsRepository.findByCategories(categories, new Sort(Sort.Direction.DESC, "views")));
         model.addAttribute("categories", categoryRepository.findAll());
         return "news";
