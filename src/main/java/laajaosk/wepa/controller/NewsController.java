@@ -125,9 +125,6 @@ public class NewsController {
         fileRepository.save(fo);
         newsRepository.save(news);
         
-        
-        
-
         return "redirect:/moderator";
     }
 
