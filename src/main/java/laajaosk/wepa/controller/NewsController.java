@@ -16,6 +16,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -126,14 +130,26 @@ public class NewsController {
 
     @GetMapping(path = "/news/{id}/img", produces = "image/jpeg")
     @ResponseBody
-    public byte[] jpegContent(@PathVariable Long id) {
-        return fileRepository.findByNews(newsRepository.getOne(id)).getContent();
+    public ResponseEntity<byte[]> jpegContent(@PathVariable Long id) {
+        try {
+            News aNew = newsRepository.getOne(id);
+            FileObject img = fileRepository.findByNews(aNew);
+            final HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType(img.getContentType()));
+            headers.setContentLength(img.getContentLength());
+            headers.add("Content-Disposition", "attachment; filename=" + img.getName());
+            
+            return new ResponseEntity<>(img.getContent(), headers, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return null;
+        }
     }
     
     
     @DeleteMapping("/news/{id}")
     public String delete(@PathVariable Long id) {
         News aNew = newsRepository.getOne(id);
+        
         for (Category category : aNew.getCategories()) {
             Category c = categoryRepository.getOne(category.getId());
             List<News> n = c.getNews();
