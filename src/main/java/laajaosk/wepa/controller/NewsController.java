@@ -20,13 +20,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
@@ -42,6 +42,7 @@ public class NewsController {
     private WriterRepository writerRepository;
 
     @GetMapping("/")
+    @Transactional
     public String index(Model model) {
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "published");
         model.addAttribute("categories", categoryRepository.findAll());
@@ -50,6 +51,7 @@ public class NewsController {
     }
 
     @GetMapping("/news/{id}")
+    @Transactional
     public String show(Model model, @PathVariable Long id) {
         News aNew = newsRepository.getOne(id);
         aNew.setViews(aNew.getViews()+1);
@@ -60,6 +62,7 @@ public class NewsController {
     }
 
     @GetMapping("/news")
+    @Transactional
     public String list(Model model) {
         model.addAttribute("news", newsRepository.findAll());
         model.addAttribute("categories", categoryRepository.findAll());
@@ -68,6 +71,7 @@ public class NewsController {
     }
 
     @GetMapping("/news/categories/{name}")
+    @Transactional
     public String listByCategory(Model model, @PathVariable String name) {
         ArrayList<Category> categories = new ArrayList<>();
         categories.add(categoryRepository.findByName(name));
@@ -78,6 +82,7 @@ public class NewsController {
     }
 
     @GetMapping("/news/{title}/listByDate")
+    @Transactional
     public String listByDate(Model model, @PathVariable String title) {
         ArrayList<Category> categories = new ArrayList<>();
         categories.add(categoryRepository.findByName(title.toLowerCase()));
@@ -87,6 +92,7 @@ public class NewsController {
     }
 
     @GetMapping("/news/{title}/listByViews")
+    @Transactional
     public String listByViews(Model model, @PathVariable String title) {
         ArrayList<Category> categories = new ArrayList<>();
         categories.add(categoryRepository.findByName(title.toLowerCase()));
@@ -96,6 +102,7 @@ public class NewsController {
     }
 
     @PostMapping("/moderator/news")
+    @Transactional
     public String add(@RequestParam String title, @RequestParam String ingress, @RequestParam String text, @RequestParam("img") MultipartFile file, @RequestParam List<Long> writers, @RequestParam List<Long> categories) throws IOException {
         News news = new News();
         news.setTitle(title);
@@ -129,6 +136,7 @@ public class NewsController {
     }
 
     @GetMapping("/images/{id}")
+    @Transactional
     public ResponseEntity<byte[]> jpegContent(@PathVariable Long id) {
         try {
             News aNew = newsRepository.getOne(id);
@@ -145,6 +153,7 @@ public class NewsController {
     
     
     @DeleteMapping("/news/{id}")
+    @Transactional
     public String delete(@PathVariable Long id) {
         News aNew = newsRepository.getOne(id);
         
