@@ -125,7 +125,7 @@ public class NewsController {
         return "redirect:/moderator";
     }
 
-    @GetMapping("/news/{id}/img")
+    @GetMapping("/images/{id}")
     public ResponseEntity<byte[]> jpegContent(@PathVariable Long id) {
         try {
             News aNew = newsRepository.getOne(id);
