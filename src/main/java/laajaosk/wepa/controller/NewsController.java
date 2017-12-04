@@ -111,16 +111,19 @@ public class NewsController {
             categoryRepository.getOne(category).getNews().add(news);
         }
 
-        newsRepository.save(news);
         FileObject fo = new FileObject();
 
         fo.setName(file.getOriginalFilename());
         fo.setContent(file.getBytes());
         fo.setContentLength(file.getSize());
         fo.setContentType(file.getContentType());
-        fo.setNews(news);
+
 
         fileRepository.save(fo);
+        fo.setNews(news);
+        news.setImg(fo);
+        newsRepository.save(news);
+        
 
         return "redirect:/moderator";
     }
@@ -129,13 +132,12 @@ public class NewsController {
     public ResponseEntity<byte[]> jpegContent(@PathVariable Long id) {
         try {
             News aNew = newsRepository.getOne(id);
-            FileObject img = fileRepository.findByNews(aNew);
             final HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.parseMediaType(img.getContentType()));
-            headers.setContentLength(img.getContentLength());
-            headers.add("Content-Disposition", "attachment; filename=" + img.getName());
+            headers.setContentType(MediaType.parseMediaType(aNew.getImg().getContentType()));
+            headers.setContentLength(aNew.getImg().getContentLength());
+            headers.add("Content-Disposition", "attachment; filename=" + aNew.getImg().getName());
             
-            return new ResponseEntity<>(img.getContent(), headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(aNew.getImg().getContent(), headers, HttpStatus.CREATED);
         } catch (Exception e) {
             return null;
         }

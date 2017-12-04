@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,9 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Data
 @Entity
 public class News extends AbstractPersistable<Long> {
+
+    @OneToOne
+    private FileObject img;
     
     private String title;
     private int views = 0;
