@@ -111,6 +111,7 @@ public class NewsController {
             categoryRepository.getOne(category).getNews().add(news);
         }
 
+        newsRepository.save(news);
         FileObject fo = new FileObject();
 
         fo.setName(file.getOriginalFilename());
@@ -119,10 +120,12 @@ public class NewsController {
         fo.setContentType(file.getContentType());
 
 
-        fileRepository.save(fo);
         fo.setNews(news);
         news.setImg(fo);
+        fileRepository.save(fo);
         newsRepository.save(news);
+        
+        
         
 
         return "redirect:/moderator";
