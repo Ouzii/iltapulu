@@ -29,7 +29,7 @@ public class ModeratorController {
     @PostMapping("/moderator/writer")
     public String addWriter(@RequestParam String name) {
         Writer w = new Writer();
-        w.setName(name.toLowerCase());
+        w.setName(name);
         writerRepository.save(w);
         
         return "redirect:/moderator";
