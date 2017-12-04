@@ -2,6 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
     <head>
+        <style>
+            ul {
+                text-align: center;
+                list-style-type: none;
+            }
+        </style>
         <meta charset="UTF-8" />
         <title>Iltapulu</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
@@ -15,33 +21,21 @@
         <br/>
         <br/>
         <br/>
+        
+             <ul>
+                <li th:each="aNew:${news}">
+                    <h2><a href="#" th:href="@{/news/{id}(id=${aNew.id})}" th:text="${aNew.title}">Otsikko</a></h2>
+                    <br/>
+                    <h4 th:text="${aNew.ingress}">Ingressi</h4>
+                    <br/>
+                    <img th:src="@{/images/{id}(id=${aNew.id})}" alt="Kuva ei näy!" width="500"/>
+                    <br/>
+                </li>
+            </ul>
+        
 
-        <ul>
-            <li th:each="aNew:${news}">
-                <h3 th:text="${aNew.title}">Otsikko</h3>
-                <br/>
-                <h4 th:text="${aNew.ingress}">Ingressi</h4>
-                <br/>
-                <img th:src="@{/images/{id}(id=${aNew.id})}" alt="Kuva ei näy!"/>
-                <br/>
-                <br/>
-                <p  th:text="${aNew.text}"/>
-                <br/>
-                <br/>
-                <br/>
-                <label>Julkaistu:</label>
-                <span th:text="${aNew.published}"/>
-                <br/>
-                <label>Kirjoittajat:</label><br/>
-                <ul>
-                    <li th:each="writer:${aNew.writers}" th:text="${writer.name}"/>
-                </ul><br/>
-                <label>Kategoriat:</label>
-                <ul>
-                    <li th:each="category:${aNew.categories}" th:text="${category.name}"/>                    
-                </ul>
-            </li>
-        </ul>
+            <div th:replace="fragments/footer :: footer">
+            </div>
     </body>
 
 </html>

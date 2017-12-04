@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+            ul {
+                text-align: center;
+                list-style-type: none;
+            }
+        </style>
+  </head>
+  <body>
+    <div th:fragment="footer">
+      
+        <div id="byViews" style="position: fixed;left:0;bottom:0">
+        <label>5 suosituinta:</label><br/>
+        <ul>
+            <li th:each="aNewByViews : ${newsByViews}">
+                <a href="#" th:href="@{/news/{id}(id=${aNewByViews.id})}" >
+                    <span th:text="${aNewByViews.title}">Otsikko</span>
+                    <img th:src="@{/images/{id}(id=${aNewByViews.id})}" alt="Kuva ei näy!" width="50"/>
+                </a>
+            </li>
+        </ul>
+        </div>
+        <div id="byDate" style="position: fixed;right:0;bottom:0">
+        <label>5 uusinta:</label><br/>
+        <ul>
+            <li th:each="aNewByDate : ${newsByDate}">
+                <a href="#" th:href="@{/news/{id}(id=${aNewByDate.id})}" >
+                    <span th:text="${aNewByDate.title}">Otsikko</span>
+                    <img th:src="@{/images/{id}(id=${aNewByDate.id})}" alt="Kuva ei näy!" width="50"/>
+                </a>
+            </li>
+        </ul>
+        </div>
+    </div>
+  </body>
+</html>

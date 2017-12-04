@@ -18,8 +18,6 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Entity
 public class News extends AbstractPersistable<Long> {
 
-    @OneToOne
-    private FileObject img;
     
     private String title;
     private int views = 0;
