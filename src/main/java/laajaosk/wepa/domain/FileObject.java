@@ -25,6 +25,6 @@ public class FileObject extends AbstractPersistable<Long> {
     private News news;
     
     @Lob
-    @Basic(fetch = FetchType.EAGER)
+    @Basic(fetch = FetchType.LAZY)
     private byte[] content;
 }

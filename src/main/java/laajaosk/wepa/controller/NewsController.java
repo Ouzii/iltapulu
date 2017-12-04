@@ -12,7 +12,6 @@ import laajaosk.wepa.repository.FileObjectRepository;
 import laajaosk.wepa.repository.NewsRepository;
 import laajaosk.wepa.repository.WriterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,9 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class NewsController {
 
     @Autowired
-    @Qualifier("newsRepository")
     private NewsRepository newsRepository;
-
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
