@@ -44,18 +44,22 @@ public class ModeratorController {
 
     @PostMapping("/moderator/writer")
     public String addWriter(@RequestParam String name) {
-        Writer w = new Writer();
-        w.setName(name);
-        writerRepository.save(w);
+        if (writerRepository.findByName(name) == null) {
+            Writer w = new Writer();
+            w.setName(name);
+            writerRepository.save(w);
+        }
 
         return "redirect:/moderator";
     }
 
     @PostMapping("/moderator/category")
     public String addCategory(@RequestParam String name) {
-        Category c = new Category();
-        c.setName(name.toLowerCase());
-        categoryRepository.save(c);
+        if (categoryRepository.findByName(name) == null) {
+            Category c = new Category();
+            c.setName(name.toLowerCase());
+            categoryRepository.save(c);
+        }
 
         return "redirect:/moderator";
     }

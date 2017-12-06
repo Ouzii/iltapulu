@@ -32,11 +32,11 @@
 
         <label>Kirjoittajat</label><br/>
         <select name="writers" form="addNews" multiple="true">
-            <option th:each="w:${writers}" th:value="${w.id}" th:text="${w.name}">name</option>
+            <option th:each="w:${writers}" th:value="${w.id}" th:text="${w.name}" selected="selected">name</option>
         </select><br/>
         <label>Kategoriat</label><br/>
         <select name="categories" form="addNews" multiple="true">
-            <option th:each="category:${categories}" th:value="${category.id}" th:text="${category.name}">name</option>
+            <option th:each="category:${categories}" th:value="${category.id}" th:text="${category.name}" selected="selected">name</option>
         </select><br/><br/>
         <input type="submit" value="add news!"/>
         </form>
