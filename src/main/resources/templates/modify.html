@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8" />
+        <title>Iltapulu</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    </head>
+    <body>
+        <div th:replace="fragments/header :: header"/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+
+
+        <form method="POST" th:action="@{/moderator/news/{id}(id=${aNew.id})}" enctype="multipart/form-data" id="modifyNews">
+            <label>Otsikko</label><br/>
+            <input style="text" name="title" th:value="${aNew.title}"/><br/>
+            <label>Ingressi</label><br/>
+            <input style="text" name="ingress" th:value="${aNew.ingress}"/><br/>
+            <label>Leipäteksti</label><br/>
+            <textarea rows="10" cols="80" name="text" th:text="${aNew.text}"></textarea><br/>
+            <label>Kuva</label><br/>
+            <img th:src="@{/images/{id}(id=${aNew.id})}" alt="Kuva ei näy!" width="600"/><br/>
+            <label>Voit korvata kuvan lisäämällä vain uuden: </label>
+            <input type="file" name="img" id="file"/><br/>
+
+
+        
+
+        <label>Kirjoittajat</label><br/>
+        <select name="writers" form="modifyNews" multiple="true">
+            <option th:each="writer:${writers}" th:value="${writer.id}" th:text="${writer.name}" th:selected="${aNew.writers.contains(writer)}"></option>
+        </select><br/>
+        <label>Kategoriat</label><br/>
+        <select name="categories" form="modifyNews" multiple="true">
+            <option th:each="category:${categories}" th:value="${category.id}" th:text="${category.name}" th:selected="${aNew.categories.contains(category)}">name</option>
+        </select><br/><br/>
+        <input type="submit" value="Muokkaa!"/>
+        </form>
+        <br/>
+
+        
+    </body>
+
+</html>

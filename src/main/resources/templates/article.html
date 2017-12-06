@@ -51,7 +51,10 @@
         <label>Luettu: </label><span th:text="${aNew.views}"/>
 
         <form th:method="DELETE" th:action="@{/news/{id}(id=${aNew.id})}">
-            <input type="submit" value="poista"/>
+            <input type="submit" value="Poista"/>
+        </form>
+        <form th:method="GET" th:action="@{/news/{id}/modify(id=${aNew.id})}">
+            <input type="submit" value="Muokkaa"/>
         </form>
 
 
