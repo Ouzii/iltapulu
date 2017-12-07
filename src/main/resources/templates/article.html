@@ -10,10 +10,17 @@
                 text-align: center;
                 list-style-type: none;
             }
-            center {
-                text-align: center;
-                width: 400px;
-                word-wrap: break-word;
+            article {
+                max-width: 400px;
+                margin: 0 auto;
+                width: 100%;
+                text-align: justify;
+            }
+            article p {
+                -webkit-hyphens: auto;
+                -moz-hyphens: auto;
+                -ms-hyphens: auto;
+                hyphens: auto;
             }
         </style>
         <meta charset="UTF-8" />
@@ -42,9 +49,9 @@
         <img th:src="@{/images/{id}(id=${aNew.id})}" alt="Kuva ei näy!" width="600"/>
         <br/>
         <br/>
-        <div style="text-align: center">
-        <center th:text="${aNew.text}">Teksti</center>
-        </div>
+        <article>
+            <p th:text="${aNew.text}">Teksti</p>
+        </article>
         <br/>
         <br/>
         <br/>

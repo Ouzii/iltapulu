@@ -68,6 +68,11 @@ public class NewsValidator {
         if (text.isEmpty()) {
             errors.add("Uutisella täytyy olla leipäteksti!");
         }
+        
+        if (text.length() > 255) {
+            errors.add("Uutisen leipätekstin maksimikoko on 255 merkkiä...");
+        }
+        
         return errors;
     }
 
