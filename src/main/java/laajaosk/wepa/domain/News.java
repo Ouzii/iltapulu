@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,9 @@ public class News extends AbstractPersistable<Long> {
 
     
     private String title;
-    private int views = 0;
+    @OneToMany(mappedBy = "aNew")
+    private List<View> views = new ArrayList<>();
+    private int viewsLastWeek = 0;
     
     @ManyToMany
     private List<Category> categories = new ArrayList<>();

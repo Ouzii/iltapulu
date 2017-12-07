@@ -1,15 +1,19 @@
 package laajaosk.wepa.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import laajaosk.wepa.domain.Category;
 import laajaosk.wepa.domain.News;
+import laajaosk.wepa.domain.View;
 import laajaosk.wepa.domain.Writer;
 import laajaosk.wepa.repository.CategoryRepository;
-import laajaosk.wepa.repository.FileObjectRepository;
 import laajaosk.wepa.repository.NewsRepository;
+import laajaosk.wepa.repository.ViewRepository;
 import laajaosk.wepa.repository.WriterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +35,8 @@ public class NewsController {
     private CategoryRepository categoryRepository;
     @Autowired
     private WriterRepository writerRepository;
+    @Autowired
+    private ViewRepository viewRepository;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -64,7 +70,9 @@ public class NewsController {
     @GetMapping("/news/{id}")
     public String show(Model model, @PathVariable Long id) {
         News aNew = newsRepository.getOne(id);
-        aNew.setViews(aNew.getViews() + 1);
+        View view = new View(aNew, new Date());
+        viewRepository.save(view);
+        aNew.getViews().add(view);
         newsRepository.save(aNew);
         model.addAttribute("aNew", aNew);
         model = addFooterAndHeaderData(model);
@@ -100,9 +108,13 @@ public class NewsController {
         model = addFooterAndHeaderData(model);
         return "news";
     }
+    
 
     private Model addAll(Model model, int index, String listedBy) {
         List<News> news = newsRepository.findAll();
+        if (listedBy.equals("viewsLastWeek")) {
+            setViewsForLastWeek(news);
+        }
         if (news.size() > 0) {
             Pageable pageable = PageRequest.of(index - 1, 10, Sort.Direction.DESC, listedBy);
             model.addAttribute("news", newsRepository.findAll(pageable));
@@ -117,6 +129,9 @@ public class NewsController {
         categories.add(categoryRepository.findByName(category));
         List<News> news = newsRepository.findByCategories(categories);
 
+        if (listedBy.equals("viewsLastWeek")) {
+            setViewsForLastWeek(news);
+        }
         if (news.size() > 0) {
             Pageable pageable = PageRequest.of(index - 1, 10, Sort.Direction.DESC, listedBy);
             model.addAttribute("news", newsRepository.findByCategories(categories, pageable));
@@ -124,6 +139,12 @@ public class NewsController {
             model.addAttribute("news", newsRepository.findByCategories(categories));
         }
         return model;
+    }
+
+    private void setViewsForLastWeek(List<News> news) {
+        for (News aNew : news) {
+            aNew.setViewsLastWeek(viewRepository.findByANewAndDateTimeAfter(aNew, new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7))).size());
+        }
     }
 
 //    @GetMapping("/news/{name}/list/{index}/listByDate")
@@ -151,10 +172,12 @@ public class NewsController {
 //        return "news";
 //    }
     private Model addFooterAndHeaderData(Model model) {
+        List<News> news = newsRepository.findAll();
         model.addAttribute("categories", categoryRepository.findAll());
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "published");
         model.addAttribute("newsByDate", newsRepository.findAll(pageable));
-        Pageable pageable2 = PageRequest.of(0, 5, Sort.Direction.DESC, "views");
+        setViewsForLastWeek(news);
+        Pageable pageable2 = PageRequest.of(0, 5, Sort.Direction.DESC, "viewsLastWeek");
         model.addAttribute("newsByViews", newsRepository.findAll(pageable2));
         return model;
     }

@@ -24,7 +24,7 @@
         <br/>
         <form method="GET" th:action="@{/news/{name}/list/{index}/published(name=${title},index=${index})}" style='text-align: center'>
             <button type="submit">Listaa tuoreimmat ensin</button>
-            <button type="submit" th:formaction="@{/news/{name}/list/{index}/views(name=${title},index=${index})}">Listaa suosituimmat ensin</button>
+            <button type="submit" th:formaction="@{/news/{name}/list/{index}/viewsLastWeek(name=${title},index=${index})}">Listaa suosituimmat ensin</button>
         </form>
 
         <ul>
@@ -40,9 +40,9 @@
         </ul>
 
 
-        <form method="GET" th:action="@{/news/list/{index}(index=${index}+1)}" style='text-align: center'>
+        <form method="GET" th:action="@{/news/{name}/list/{index}/published(index=${index}+1, name=${title})}" style='text-align: center'>
             <div th:if="${index}>1">
-                <button type="submit" th:formaction="@{/news/list/{index}(index=${index}-1)}">Edelliset 10</button>
+                <button type="submit" th:formaction="@{/news/{name}/list/{index}/published(index=${index}-1, name=${title})}">Edelliset 10</button>
             </div>
             <div th:if="${index}*10 <= ${newsCount}">
                 <button type="submit">Seuraavat 10</button>
