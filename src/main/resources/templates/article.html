@@ -10,6 +10,11 @@
                 text-align: center;
                 list-style-type: none;
             }
+            center {
+                text-align: center;
+                width: 400px;
+                word-wrap: break-word;
+            }
         </style>
         <meta charset="UTF-8" />
         <title>Iltapulu</title>
@@ -25,7 +30,11 @@
         <br/>
         <br/>
         <br/>
-
+        <div th:if="${messages}">
+            <ul>
+                <li th:each="message:${messages}" th:text="${message}"/>
+            </ul>
+        </div>
         <h1 th:text="${aNew.title}">Otsikko</h1>
         <br/>
         <h3 th:text="${aNew.ingress}">Ingressi</h3>
@@ -33,7 +42,9 @@
         <img th:src="@{/images/{id}(id=${aNew.id})}" alt="Kuva ei näy!" width="600"/>
         <br/>
         <br/>
-        <p  th:text="${aNew.text}"/>
+        <div style="text-align: center">
+        <center th:text="${aNew.text}">Teksti</center>
+        </div>
         <br/>
         <br/>
         <br/>

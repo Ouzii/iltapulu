@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" style="height: 100%">
 
     <head>
         <style>
@@ -22,44 +22,52 @@
         <br/>
         <br/>
         <br/>
-        <form method="GET" th:action="@{/news/{name}/list/{index}/published(name=${title},index=${index})}" style='text-align: center'>
-            <button type="submit">Listaa tuoreimmat ensin</button>
-            <button type="submit" th:formaction="@{/news/{name}/list/{index}/viewsLastWeek(name=${title},index=${index})}">Listaa suosituimmat ensin</button>
-        </form>
+        <br/>
+        <br/>
+        <br/>
 
-        <ul>
-            <li th:each="aNew:${news}">
-                <h2><a href="#" th:href="@{/news/{id}(id=${aNew.id})}" th:text="${aNew.title}">Otsikko</a></h2>
-                <br/>
-                <h4 th:text="${aNew.ingress}">Ingressi</h4>
-                <br/>
-                <img th:src="@{/images/{id}(id=${aNew.id})}" alt="Kuva ei näy!" width="500"/>
-                <br/>
-                <br/>
-            </li>
-        </ul>
-
-
-        <form method="GET" th:action="@{/news/{name}/list/{index}/published(index=${index}+1, name=${title})}" style='text-align: center'>
-            <div th:if="${index}>1">
-                <button type="submit" th:formaction="@{/news/{name}/list/{index}/published(index=${index}-1, name=${title})}">Edelliset 10</button>
+            <div th:if="${messages}">
+                <ul>
+                    <li th:each="message:${messages}" th:text="${message}"/>
+                </ul>
             </div>
-            <div th:if="${index}*10 <= ${newsCount}">
-                <button type="submit">Seuraavat 10</button>
+            <form method="GET" th:action="@{/news/{name}/list/{index}/published(name=${title},index=${index})}" style='text-align: center'>
+                <button type="submit">Listaa tuoreimmat ensin</button>
+                <button type="submit" th:formaction="@{/news/{name}/list/{index}/viewsLastWeek(name=${title},index=${index})}">Listaa suosituimmat ensin</button>
+            </form>
+
+            <ul>
+                <li th:each="aNew:${news}">
+                    <h2><a href="#" th:href="@{/news/{id}(id=${aNew.id})}" th:text="${aNew.title}">Otsikko</a></h2>
+                    <br/>
+                    <h4 th:text="${aNew.ingress}">Ingressi</h4>
+                    <br/>
+                    <img th:src="@{/images/{id}(id=${aNew.id})}" alt="Kuva ei näy!" width="500"/>
+                    <br/>
+                    <br/>
+                </li>
+            </ul>
+
+
+            <form method="GET" th:action="@{/news/{name}/list/{index}/{listedBy}(index=${index}+1, name=${title}, listedBy=${listedBy})}" style='text-align: center'>
+                <div th:if="${index}>1">
+                    <button type="submit" th:formaction="@{/news/{name}/list/{index}/{listedBy}(index=${index}-1, name=${title}, listedBy=${listedBy})}">Edelliset 10</button>
+                </div>
+                <div th:if="${index}*10 <= ${newsCount}">
+                    <button type="submit">Seuraavat 10</button>
+                </div>
+            </form>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <div th:replace="fragments/footer :: footer">
             </div>
-        </form>
-
-
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-
-        <div th:replace="fragments/footer :: footer">
-        </div>
     </body>
+
+
 
 </html>

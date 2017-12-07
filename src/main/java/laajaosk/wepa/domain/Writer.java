@@ -19,5 +19,7 @@ public class Writer extends AbstractPersistable<Long> {
     private List<News> news = new ArrayList<>();
     
     private String name;
+    private String password;
+    
     
 }

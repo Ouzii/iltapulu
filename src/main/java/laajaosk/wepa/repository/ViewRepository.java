@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 public interface ViewRepository extends JpaRepository<View, Long> {
 
     List<View> findByANewAndDateTimeAfter(News aNew, Date dateTime);
+    
+    View findByANew(News aNew);
 
     @Query("select v from View v where v.aNew = ?1 and dateTime > ?2")
     List<View> findByANew(News aNew, Date dateTime);

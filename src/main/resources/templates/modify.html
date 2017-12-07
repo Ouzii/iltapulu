@@ -16,6 +16,11 @@
         <br/>
         <br/>
 
+        <div th:if="${messages}">
+            <ul>
+                <li th:each="message:${messages}" th:text="${message}"/>
+            </ul>
+        </div>
 
         <form method="POST" th:action="@{/moderator/news/{id}(id=${aNew.id})}" enctype="multipart/form-data" id="modifyNews">
             <label>Otsikko</label><br/>
@@ -27,7 +32,7 @@
             <label>Kuva</label><br/>
             <img th:src="@{/images/{id}(id=${aNew.id})}" alt="Kuva ei näy!" width="600"/><br/>
             <label>Voit korvata kuvan lisäämällä vain uuden: </label>
-            <input type="file" name="img" id="file"/><br/>
+            <input type="file" name="img" id="img"/><br/>
 
 
         

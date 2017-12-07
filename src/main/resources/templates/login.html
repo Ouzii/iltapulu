@@ -2,12 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
     <head>
-        <style>
-            ul {
-                text-align: center;
-                list-style-type: none;
-            }
-        </style>
         <meta charset="UTF-8" />
         <title>Iltapulu</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
@@ -15,8 +9,10 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
     </head>
-    <body>
+    <body style="text-align: center">
         <div th:replace="fragments/header :: header"/>
+
+        <br/>
         <br/>
         <br/>
         <br/>
@@ -26,20 +22,13 @@
                 <li th:each="message:${messages}" th:text="${message}"/>
             </ul>
         </div>
-             <ul>
-                <li th:each="aNew:${news}">
-                    <h2><a href="#" th:href="@{/news/{id}(id=${aNew.id})}" th:text="${aNew.title}">Otsikko</a></h2>
-                    <br/>
-                    <h4 th:text="${aNew.ingress}">Ingressi</h4>
-                    <br/>
-                    <img th:src="@{/images/{id}(id=${aNew.id})}" alt="Kuva ei näy!" width="500"/>
-                    <br/>
-                </li>
-            </ul>
-        
+        <form action="/login" method="POST">
+            <input type="text" name="username" placeholder="Käyttäjätunnus"/><br/>
+            <input type="password" name="password" placeholder="Salasana"/><br/>
+            <input type="submit" value="Kirjaudu"/>
+        </form>
 
-            <div th:replace="fragments/footer :: footer">
-            </div>
+        
     </body>
 
 </html>

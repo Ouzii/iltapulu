@@ -1,11 +1,8 @@
 package laajaosk.wepa.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import laajaosk.wepa.domain.Category;
 import laajaosk.wepa.domain.News;
@@ -61,10 +58,15 @@ public class NewsController {
             writerRepository.save(jarkko);
         }
 
+        model = makeIndexModel(model);
+        return "index";
+    }
+    
+    public Model makeIndexModel(Model model) {
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "published");
         model.addAttribute("news", newsRepository.findAll(pageable));
         model = addFooterAndHeaderData(model);
-        return "index";
+        return model;
     }
 
     @GetMapping("/news/{id}")
@@ -104,6 +106,7 @@ public class NewsController {
         }
         model.addAttribute("title", name);
         model.addAttribute("index", index);
+        model.addAttribute("listedBy", listedBy);
         model = findCategoryListSize(model, name);
         model = addFooterAndHeaderData(model);
         return "news";
@@ -171,7 +174,7 @@ public class NewsController {
 //        model = addFooterAndHeaderData(model);
 //        return "news";
 //    }
-    private Model addFooterAndHeaderData(Model model) {
+    public Model addFooterAndHeaderData(Model model) {
         List<News> news = newsRepository.findAll();
         model.addAttribute("categories", categoryRepository.findAll());
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "published");
@@ -192,4 +195,5 @@ public class NewsController {
         }
         return model;
     }
+    
 }

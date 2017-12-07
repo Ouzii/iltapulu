@@ -16,6 +16,11 @@
         <br/>
         <br/>
 
+        <div th:if="${messages}">
+            <ul>
+                <li th:each="message:${messages}" th:text="${message}"/>
+            </ul>
+        </div>
 
         <form method="POST" action="/moderator/news" enctype="multipart/form-data" id="addNews">
             <label>Otsikko</label><br/>
@@ -25,7 +30,7 @@
             <label>Leipäteksti</label><br/>
             <textarea rows="10" cols="80" name="text"></textarea><br/>
             <label>Kuva</label><br/>
-            <input type="file" name="img" id="file"/><br/>
+            <input type="file" name="img" id="img"/><br/>
 
 
         

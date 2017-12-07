@@ -6,12 +6,16 @@ import java.util.List;
 import laajaosk.wepa.domain.Category;
 import laajaosk.wepa.domain.FileObject;
 import laajaosk.wepa.domain.News;
+import laajaosk.wepa.domain.View;
 import laajaosk.wepa.domain.Writer;
 import laajaosk.wepa.repository.CategoryRepository;
 import laajaosk.wepa.repository.FileObjectRepository;
 import laajaosk.wepa.repository.NewsRepository;
+import laajaosk.wepa.repository.ViewRepository;
 import laajaosk.wepa.repository.WriterRepository;
+import laajaosk.wepa.validators.NewsValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @Transactional
@@ -34,6 +39,10 @@ public class ModeratorController {
     private NewsRepository newsRepository;
     @Autowired
     private FileObjectRepository fileRepository;
+    @Autowired
+    private ViewRepository viewRepository;
+
+    private NewsValidator newsValidator = new NewsValidator();
 
     @GetMapping("/moderator")
     public String list(Model model) {
@@ -66,7 +75,14 @@ public class ModeratorController {
 
     @PostMapping("/moderator/news")
     @Transactional
-    public String add(@RequestParam String title, @RequestParam String ingress, @RequestParam String text, @RequestParam("img") MultipartFile file, @RequestParam List<Long> writers, @RequestParam List<Long> categories) throws IOException {
+    public String add(RedirectAttributes ra, Model model, @RequestParam String title, @RequestParam String ingress, @RequestParam String text, @RequestParam("img") MultipartFile img, @RequestParam(value = "writers", required = false) List<Long> writers, @RequestParam(value = "categories", required = false) List<Long> categories) throws IOException {
+        List<String> errors = newsValidator.runValidations(title, ingress, text, categories, writers, img);
+        if (!errors.isEmpty()) {
+            ra.addFlashAttribute("messages", errors);
+            ra.addFlashAttribute("writers", writerRepository.findAll());
+            ra.addFlashAttribute("categories", categoryRepository.findAll());
+            return "redirect:/moderator";
+        }
         News news = new News();
         news.setTitle(title);
         news.setIngress(ingress);
@@ -84,35 +100,47 @@ public class ModeratorController {
         newsRepository.save(news);
         FileObject fo = new FileObject();
 
-        fo.setName(file.getOriginalFilename());
-        fo.setContent(file.getBytes());
-        fo.setContentLength(file.getSize());
-        fo.setContentType(file.getContentType());
+        fo.setName(img.getOriginalFilename());
+        fo.setContent(img.getBytes());
+        fo.setContentLength(img.getSize());
+        fo.setContentType(img.getContentType());
 
         fo.setNews(news);
         fileRepository.save(fo);
 
+        List<String> messages = new ArrayList<>();
+        messages.add("Uutinen " + title + " luotu!");
+        ra.addFlashAttribute("messages", messages);
         return "redirect:/moderator";
     }
 
     @DeleteMapping("/news/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(RedirectAttributes redirectAttribute, @PathVariable Long id) {
         News aNew = newsRepository.getOne(id);
+        String title = aNew.getTitle();
 
         for (Category category : aNew.getCategories()) {
-            Category c = categoryRepository.getOne(category.getId());
-            List<News> n = c.getNews();
+            Category category2 = categoryRepository.getOne(category.getId());
+            List<News> n = category2.getNews();
             n.remove(aNew);
-            c.setNews(n);
+            category2.setNews(n);
+            categoryRepository.save(category2);
         }
         for (Writer writer : aNew.getWriters()) {
-            Writer w = writerRepository.getOne(writer.getId());
-            List<News> n = w.getNews();
+            Writer writer2 = writerRepository.getOne(writer.getId());
+            List<News> n = writer2.getNews();
             n.remove(aNew);
-            w.setNews(n);
+            writer2.setNews(n);
+            writerRepository.save(writer2);
+        }
+        for (View view : aNew.getViews()) {
+            viewRepository.delete(view);
         }
         fileRepository.delete(fileRepository.findByNews(aNew));
         newsRepository.delete(aNew);
+        List<String> messages = new ArrayList<>();
+        messages.add("\"" + title + "\" on poistettu onnistuneesti!");
+        redirectAttribute.addFlashAttribute("messages", messages);
         return "redirect:/";
     }
 
@@ -125,7 +153,19 @@ public class ModeratorController {
     }
 
     @PostMapping("/moderator/news/{id}")
-    public String postModify(@PathVariable Long id, @RequestParam String title, @RequestParam String ingress, @RequestParam String text, @RequestParam("img") MultipartFile file, @RequestParam List<Long> writers, @RequestParam List<Long> categories) throws IOException {
+    public String postModify(RedirectAttributes redirectAttribute, @PathVariable Long id, @RequestParam String title, @RequestParam String ingress, @RequestParam String text, @RequestParam("img") MultipartFile img, @RequestParam(value = "writers", required = false) List<Long> writers, @RequestParam(value = "categories", required = false) List<Long> categories) throws IOException {
+        List<String> errors = new ArrayList<>();
+        if (!img.isEmpty()) {
+            errors = newsValidator.runValidations(title, ingress, text, categories, writers, img);
+        } else {
+            errors = newsValidator.runValidationsNoImg(title, ingress, text, categories, writers);
+        }
+        if (!errors.isEmpty()) {
+            redirectAttribute.addFlashAttribute("messages", errors);
+            redirectAttribute.addFlashAttribute("writers", writerRepository.findAll());
+            redirectAttribute.addFlashAttribute("categories", categoryRepository.findAll());
+            return "redirect:/news/" + id;
+        }
         News aNew = newsRepository.getOne(id);
         aNew.setTitle(title);
         aNew.setIngress(ingress);
@@ -143,19 +183,23 @@ public class ModeratorController {
         }
         newsRepository.save(aNew);
 
-        if (file != null && !file.isEmpty()) {
+        if (img != null && !img.isEmpty()) {
             FileObject old = fileRepository.findByNews(aNew);
             FileObject fo = new FileObject();
 
-            fo.setName(file.getOriginalFilename());
-            fo.setContent(file.getBytes());
-            fo.setContentLength(file.getSize());
-            fo.setContentType(file.getContentType());
+            fo.setName(img.getOriginalFilename());
+            fo.setContent(img.getBytes());
+            fo.setContentLength(img.getSize());
+            fo.setContentType(img.getContentType());
 
             fo.setNews(aNew);
             fileRepository.save(fo);
             fileRepository.delete(old);
         }
+
+        List<String> messages = new ArrayList<>();
+        messages.add("Muokkaus onnistui!");
+        redirectAttribute.addFlashAttribute("messages", messages);
 
         return "redirect:/news/" + id;
     }

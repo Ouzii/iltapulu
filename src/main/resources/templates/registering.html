@@ -7,6 +7,9 @@
                 text-align: center;
                 list-style-type: none;
             }
+            body {
+                text-align: center;
+            }
         </style>
         <meta charset="UTF-8" />
         <title>Iltapulu</title>
@@ -17,6 +20,8 @@
     </head>
     <body>
         <div th:replace="fragments/header :: header"/>
+
+        <br/>
         <br/>
         <br/>
         <br/>
@@ -26,20 +31,14 @@
                 <li th:each="message:${messages}" th:text="${message}"/>
             </ul>
         </div>
-             <ul>
-                <li th:each="aNew:${news}">
-                    <h2><a href="#" th:href="@{/news/{id}(id=${aNew.id})}" th:text="${aNew.title}">Otsikko</a></h2>
-                    <br/>
-                    <h4 th:text="${aNew.ingress}">Ingressi</h4>
-                    <br/>
-                    <img th:src="@{/images/{id}(id=${aNew.id})}" alt="Kuva ei näy!" width="500"/>
-                    <br/>
-                </li>
-            </ul>
-        
+        <form action="/register" method="POST">
+            <input type="text" name="username" placeholder="Käyttäjätunnus"/><br/>
+            <input type="password" name="password" placeholder="Salasana"/><br/>
+            <input type="password" name="passwordConfirm" placeholder="Salasana uudestaan"/><br/>
+            <input type="submit" value="Rekisteröidy"/>
+        </form>
 
-            <div th:replace="fragments/footer :: footer">
-            </div>
+
     </body>
 
 </html>
