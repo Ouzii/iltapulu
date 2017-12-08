@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CategoryController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">WepaHarjoitus</a> &gt; <a href="index.source.html" class="el_package">laajaosk.wepa.controller</a> &gt; <span class="el_source">CategoryController.java</span></div><h1>CategoryController.java</h1><pre class="source lang-java linenums">package laajaosk.wepa.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+import laajaosk.wepa.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+@Controller
+<span class="fc" id="L15">public class CategoryController {</span>
+
+    @Autowired
+    private CategoryService categoryService;
+
+    
+    @PostMapping(&quot;/moderator/category&quot;)
+    public String addCategory(RedirectAttributes redirectAttribute, @RequestParam String name) {
+<span class="nc" id="L23">        List&lt;String&gt; errors = categoryService.addCategory(name);</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">        if (!errors.isEmpty()) {</span>
+<span class="nc" id="L25">            redirectAttribute.addFlashAttribute(&quot;messages&quot;, errors);</span>
+<span class="nc" id="L26">            return &quot;redirect:/moderator&quot;;</span>
+        }
+<span class="nc" id="L28">        List&lt;String&gt; messages = categoryService.addToMessages(&quot;Kategoria &quot; + name + &quot; luotu!&quot;, new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L29">        redirectAttribute.addFlashAttribute(&quot;messages&quot;, messages);</span>
+<span class="nc" id="L30">        return &quot;redirect:/moderator&quot;;</span>
+    }
+
+    @DeleteMapping(&quot;/moderator/category/{id}&quot;)
+    public String deleteCategory(RedirectAttributes redirectAttribute, @PathVariable Long id) {
+<span class="nc" id="L35">        String name = categoryService.deleteCategory(id);</span>
+<span class="nc" id="L36">        List&lt;String&gt; messages = categoryService.addToMessages(&quot;Kategoria &quot; + name + &quot; poistettu!&quot;, new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L37">        redirectAttribute.addFlashAttribute(&quot;messages&quot;, messages);</span>
+<span class="nc" id="L38">        return &quot;redirect:/moderator&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

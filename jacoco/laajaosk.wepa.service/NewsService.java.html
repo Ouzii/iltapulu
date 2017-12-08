@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NewsService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">WepaHarjoitus</a> &gt; <a href="index.source.html" class="el_package">laajaosk.wepa.service</a> &gt; <span class="el_source">NewsService.java</span></div><h1>NewsService.java</h1><pre class="source lang-java linenums">package laajaosk.wepa.service;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import laajaosk.wepa.domain.Category;
+import laajaosk.wepa.domain.News;
+import laajaosk.wepa.domain.View;
+import laajaosk.wepa.domain.Writer;
+import laajaosk.wepa.repository.CategoryRepository;
+import laajaosk.wepa.repository.NewsRepository;
+import laajaosk.wepa.repository.ViewRepository;
+import laajaosk.wepa.repository.WriterRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+
+@Service
+<span class="fc" id="L23">public class NewsService {</span>
+
+    @Autowired
+    private NewsRepository newsRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private ViewRepository viewRepository;
+    @Autowired
+    private WriterRepository writerRepository;
+
+    public Model addAll(Model model, int index, String listedBy) {
+<span class="fc" id="L35">        List&lt;News&gt; news = newsRepository.findAll();</span>
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">        if (listedBy.equals(&quot;viewsLastWeek&quot;)) {</span>
+<span class="nc" id="L37">            setViewsForLastWeek(news);</span>
+        }
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (news.size() &gt; 0) {</span>
+<span class="fc" id="L40">            Pageable pageable = PageRequest.of(index - 1, 10, Sort.Direction.DESC, listedBy);</span>
+<span class="fc" id="L41">            model.addAttribute(&quot;news&quot;, newsRepository.findAll(pageable));</span>
+<span class="fc" id="L42">        } else {</span>
+<span class="nc" id="L43">            model.addAttribute(&quot;news&quot;, newsRepository.findAll());</span>
+        }
+<span class="fc" id="L45">        return model;</span>
+    }
+
+    public Model addFromCategory(Model model, String category, int index, String listedBy) {
+<span class="fc" id="L49">        ArrayList&lt;Category&gt; categories = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L50">        categories.add(categoryRepository.findByName(category));</span>
+<span class="fc" id="L51">        List&lt;News&gt; news = newsRepository.findByCategories(categories);</span>
+
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (listedBy.equals(&quot;viewsLastWeek&quot;)) {</span>
+<span class="nc" id="L54">            setViewsForLastWeek(news);</span>
+        }
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">        if (news.size() &gt; 0) {</span>
+<span class="fc" id="L57">            Pageable pageable = PageRequest.of(index - 1, 10, Sort.Direction.DESC, listedBy);</span>
+<span class="fc" id="L58">            model.addAttribute(&quot;news&quot;, newsRepository.findByCategories(categories, pageable));</span>
+<span class="fc" id="L59">        } else {</span>
+<span class="nc" id="L60">            model.addAttribute(&quot;news&quot;, newsRepository.findByCategories(categories));</span>
+        }
+<span class="fc" id="L62">        return model;</span>
+    }
+
+    private void setViewsForLastWeek(List&lt;News&gt; news) {
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        for (News aNew : news) {</span>
+<span class="fc" id="L67">            aNew.setViewsLastWeek(viewRepository.findByANewAndDateTimeAfter(aNew, new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7))).size());</span>
+<span class="fc" id="L68">        }</span>
+<span class="fc" id="L69">    }</span>
+
+    public Model addFooterAndHeaderData(Model model) {
+<span class="fc" id="L72">        List&lt;News&gt; news = newsRepository.findAll();</span>
+<span class="fc" id="L73">        model.addAttribute(&quot;categories&quot;, categoryRepository.findAll());</span>
+<span class="fc" id="L74">        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, &quot;published&quot;);</span>
+<span class="fc" id="L75">        model.addAttribute(&quot;newsByDate&quot;, newsRepository.findAll(pageable));</span>
+<span class="fc" id="L76">        setViewsForLastWeek(news);</span>
+<span class="fc" id="L77">        Pageable pageable2 = PageRequest.of(0, 5, Sort.Direction.DESC, &quot;viewsLastWeek&quot;);</span>
+<span class="fc" id="L78">        model.addAttribute(&quot;newsByViews&quot;, newsRepository.findAll(pageable2));</span>
+<span class="fc" id="L79">        return model;</span>
+    }
+
+    public Model findCategoryListSize(Model model, String categoryName) {
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (categoryName.equals(&quot;Uutiset&quot;)) {</span>
+<span class="fc" id="L84">            model.addAttribute(&quot;newsCount&quot;, newsRepository.findAll().size());</span>
+        } else {
+<span class="fc" id="L86">            ArrayList&lt;Category&gt; categories = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L87">            categories.add(categoryRepository.findByName(categoryName));</span>
+<span class="fc" id="L88">            List&lt;News&gt; news = newsRepository.findByCategories(categories);</span>
+<span class="fc" id="L89">            model.addAttribute(&quot;newsCount&quot;, news.size());</span>
+        }
+<span class="fc" id="L91">        return model;</span>
+    }
+
+    public Model makeIndexModel(Model model) {
+<span class="fc" id="L95">        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, &quot;published&quot;);</span>
+<span class="fc" id="L96">        model.addAttribute(&quot;news&quot;, newsRepository.findAll(pageable));</span>
+<span class="fc" id="L97">        model = addFooterAndHeaderData(model);</span>
+<span class="fc" id="L98">        return model;</span>
+    }
+
+    public News addViewForaNew(Long id) {
+<span class="fc" id="L102">        News aNew = newsRepository.getOne(id);</span>
+<span class="fc" id="L103">        View view = new View(aNew, new Date());</span>
+<span class="fc" id="L104">        viewRepository.save(view);</span>
+<span class="fc" id="L105">        aNew.getViews().add(view);</span>
+<span class="fc" id="L106">        newsRepository.save(aNew);</span>
+<span class="fc" id="L107">        return aNew;</span>
+    }
+
+//    public void initiateTestData() {
+//        Category viihde = new Category();
+//        viihde.setName(&quot;Viihde&quot;);
+//        Category urheilu = new Category();
+//        urheilu.setName(&quot;Urheilu&quot;);
+//        Category uutiset = new Category();
+//        uutiset.setName(&quot;Uutiset&quot;);
+//        if (categoryRepository.findByName(viihde.getName()) == null &amp;&amp; categoryRepository.findByName(urheilu.getName()) == null) {
+//            categoryRepository.save(viihde);
+//            categoryRepository.save(urheilu);
+//            categoryRepository.save(uutiset);
+//        }
+//
+//        Writer pekka = new Writer();
+//        pekka.setName(&quot;Pekka&quot;);
+//        Writer jarkko = new Writer();
+//        jarkko.setName(&quot;Jarkko&quot;);
+//        if (writerRepository.findByName(pekka.getName()) == null &amp;&amp; writerRepository.findByName(jarkko.getName()) == null) {
+//            writerRepository.save(pekka);
+//            writerRepository.save(jarkko);
+//        }
+//    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
