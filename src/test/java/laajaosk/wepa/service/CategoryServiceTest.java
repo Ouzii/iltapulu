@@ -6,7 +6,8 @@ import javax.transaction.Transactional;
 import laajaosk.wepa.domain.Category;
 import laajaosk.wepa.repository.CategoryRepository;
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,11 @@ public class CategoryServiceTest {
         Category category = new Category();
         category.setName("Kategoria");
         categoryRepository.save(category);
-        assertEquals(1, categoryRepository.findAll().size());
+        List<Category> categories = categoryRepository.findAll();
+        assertTrue(categories.contains(category));
         categoryService.deleteCategory(categoryRepository.findByName("Kategoria").getId());
-        assertEquals(0, categoryRepository.findAll().size());
+        categories = categoryRepository.findAll();
+        assertFalse(categories.contains(category));
     }
     
     @Test

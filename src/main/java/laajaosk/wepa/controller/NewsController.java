@@ -18,7 +18,7 @@ public class NewsController {
 
     @GetMapping("/")
     public String index(Model model) {
-        newsService.initiateTestData();
+//        newsService.initiateTestData();
         model = newsService.makeIndexModel(model);
         return "index";
     }

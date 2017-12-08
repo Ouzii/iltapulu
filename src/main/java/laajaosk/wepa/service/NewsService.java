@@ -85,7 +85,8 @@ public class NewsService {
         } else {
             ArrayList<Category> categories = new ArrayList<>();
             categories.add(categoryRepository.findByName(categoryName));
-            model.addAttribute("newsCount", categories.size());
+            List<News> news = newsRepository.findByCategories(categories);
+            model.addAttribute("newsCount", news.size());
         }
         return model;
     }
@@ -106,26 +107,26 @@ public class NewsService {
         return aNew;
     }
 
-    public void initiateTestData() {
-        Category viihde = new Category();
-        viihde.setName("Viihde");
-        Category urheilu = new Category();
-        urheilu.setName("Urheilu");
-        Category uutiset = new Category();
-        uutiset.setName("Uutiset");
-        if (categoryRepository.findByName(viihde.getName()) == null && categoryRepository.findByName(urheilu.getName()) == null) {
-            categoryRepository.save(viihde);
-            categoryRepository.save(urheilu);
-            categoryRepository.save(uutiset);
-        }
-
-        Writer pekka = new Writer();
-        pekka.setName("Pekka");
-        Writer jarkko = new Writer();
-        jarkko.setName("Jarkko");
-        if (writerRepository.findByName(pekka.getName()) == null && writerRepository.findByName(jarkko.getName()) == null) {
-            writerRepository.save(pekka);
-            writerRepository.save(jarkko);
-        }
-    }
+//    public void initiateTestData() {
+//        Category viihde = new Category();
+//        viihde.setName("Viihde");
+//        Category urheilu = new Category();
+//        urheilu.setName("Urheilu");
+//        Category uutiset = new Category();
+//        uutiset.setName("Uutiset");
+//        if (categoryRepository.findByName(viihde.getName()) == null && categoryRepository.findByName(urheilu.getName()) == null) {
+//            categoryRepository.save(viihde);
+//            categoryRepository.save(urheilu);
+//            categoryRepository.save(uutiset);
+//        }
+//
+//        Writer pekka = new Writer();
+//        pekka.setName("Pekka");
+//        Writer jarkko = new Writer();
+//        jarkko.setName("Jarkko");
+//        if (writerRepository.findByName(pekka.getName()) == null && writerRepository.findByName(jarkko.getName()) == null) {
+//            writerRepository.save(pekka);
+//            writerRepository.save(jarkko);
+//        }
+//    }
 }
