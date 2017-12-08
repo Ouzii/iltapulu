@@ -4,4 +4,4 @@ notifications:
   email: false
 
 after_success:
-  - "bash <(curl -s https://codecov.io/bash) -t repository-upload-token"
+  - "bash <(curl -s https://codecov.io/bash) -t 96478cda-b17f-4dce-b98b-31928dc69cdd"
