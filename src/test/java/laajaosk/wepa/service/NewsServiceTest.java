@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
+import laajaosk.wepa.ModelMock;
 import laajaosk.wepa.MultipartFileMock;
 import laajaosk.wepa.domain.Category;
 import laajaosk.wepa.domain.News;
@@ -12,6 +13,8 @@ import laajaosk.wepa.repository.CategoryRepository;
 import laajaosk.wepa.repository.NewsRepository;
 import laajaosk.wepa.repository.WriterRepository;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,9 +39,12 @@ public class NewsServiceTest {
     private WriterRepository writerRepository;
 
     private MultipartFileMock img;
+    private ModelMock model;
 
     @Before
     public void setUp() {
+        this.model = new ModelMock();
+        this.model.addAttribute("Test", new ArrayList<>());
         this.img = new MultipartFileMock("Kuva", "Kuva.jpg", "image/jpg", new Long(120), new byte[0]);
         Writer writer = new Writer();
         writer.setName("Kirjoittaja");
@@ -82,6 +88,44 @@ public class NewsServiceTest {
         assertEquals(0, aNew.getViews().size());
         newsService.addViewForaNew(aNew.getId());
         assertEquals(1, aNew.getViews().size());
+    }
+    
+    @Test
+    public void testAddAll() {
+        this.model = (ModelMock) newsService.addAll(this.model, 1, "published");
+        assertTrue(this.model.getAttributes().get("news") != null);
+    }
+    
+    @Test
+    public void testAddFromCategory() {
+        this.model = (ModelMock) newsService.addFromCategory(this.model, "Kategoria", 1, "published");
+        assertTrue(this.model.getAttributes().get("news") != null);
+    }
+    
+    @Test
+    public void testAddFooterAndHeaderData() {
+        this.model = (ModelMock) newsService.addFooterAndHeaderData(this.model);
+        assertTrue(this.model.containsAttribute("categories"));
+        assertTrue(this.model.containsAttribute("newsByDate"));
+        assertTrue(this.model.containsAttribute("newsByViews"));
+    }
+    
+    @Test
+    public void testMakeIndexModel() {
+        this.model = (ModelMock) newsService.makeIndexModel(this.model);
+        assertTrue(this.model.containsAttribute("news"));
+    }
+    
+    @Test
+    public void testFindCategoryListSize() {
+        this.model = (ModelMock) newsService.findCategoryListSize(this.model, "Uutiset");
+        assertTrue(this.model.containsAttribute("newsCount"));
+        assertEquals(1, this.model.getAttributes().get("newsCount"));
+        this.model = new ModelMock();
+        assertFalse(this.model.containsAttribute("newsCount"));
+        this.model = (ModelMock) newsService.findCategoryListSize(this.model, "Kategoria");
+        assertTrue(this.model.containsAttribute("newsCount"));
+        assertEquals(1, this.model.getAttributes().get("newsCount"));
     }
 
 }

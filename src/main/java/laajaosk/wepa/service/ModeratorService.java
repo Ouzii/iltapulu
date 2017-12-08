@@ -158,7 +158,7 @@ public class ModeratorService {
         return model;
     }
     
-    public Model addNewsToModel(Model model, Long id) {
+    public Model addaNewToModel(Model model, Long id) {
         model.addAttribute("aNew", newsRepository.getOne(id));
         return model;
     }

@@ -70,7 +70,7 @@ public class ModeratorController {
 
     @GetMapping("/news/{id}/modify")
     public String modify(Model model, @PathVariable Long id) {
-        moderatorService.addNewsToModel(model, id);
+        moderatorService.addaNewToModel(model, id);
         moderatorService.addCategoriesAndWriters(model);
         return "modify";
     }
