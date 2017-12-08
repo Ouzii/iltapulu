@@ -30,12 +30,12 @@ public class LoginController {
         if (loginService.login(session, username, password, redirectAttribute)) {
             messages.add("Kirjauduttu! Tervetuloa " + username);
             redirectAttribute.addFlashAttribute("messages", messages);
-
+            return "redirect:/";
         } else {
             messages.add("Väärä käyttäjätunnus tai salasana!");
             redirectAttribute.addFlashAttribute("messages", messages);
+            return "redirect:/login";
         }
-        return "redirect:/";
     }
 
     @PostMapping("/logout")

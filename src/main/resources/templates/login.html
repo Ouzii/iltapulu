@@ -2,11 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
     <head>
+        <style>
+            ul {
+                list-style-type: none;
+            }
+        </style>
         <meta charset="UTF-8" />
         <title>Iltapulu</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<!--        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
 
     </head>
     <body style="text-align: center">
@@ -23,8 +28,8 @@
             </ul>
         </div>
         <form action="/login" method="POST">
-            <input type="text" name="username" placeholder="Käyttäjätunnus"/><br/>
-            <input type="password" name="password" placeholder="Salasana"/><br/>
+            <input type="text" name="username" id="username" placeholder="Käyttäjätunnus"/><br/>
+            <input type="password" name="password" id="password" placeholder="Salasana"/><br/>
             <input type="submit" value="Kirjaudu"/>
         </form>
 

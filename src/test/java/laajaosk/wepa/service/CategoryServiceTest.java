@@ -23,13 +23,6 @@ public class CategoryServiceTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @Before
-    public void setUp() {
-//        Category category = new Category();
-//        category.setName("Kategoria");
-//        categoryRepository.save(category);
-    }
-
     @Test
     public void testAddCategory() {
         categoryService.addCategory("Kategoria");
