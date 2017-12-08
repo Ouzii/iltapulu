@@ -20,5 +20,7 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     List<News> findByCategories(List<Category> categories, Pageable pageable);
 
     List<News> findByCategoriesAndPublishedAfter(List<Category> categories, Date date, Sort sort);
+    
+    News findByTitle(String title);
 
 }

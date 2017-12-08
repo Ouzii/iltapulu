@@ -1,27 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package laajaosk.wepa.validators;
+package laajaosk.wepa.validator;
 
 import java.util.ArrayList;
 import java.util.List;
-import laajaosk.wepa.domain.Category;
-import laajaosk.wepa.domain.Writer;
-import laajaosk.wepa.repository.CategoryRepository;
-import laajaosk.wepa.repository.FileObjectRepository;
-import laajaosk.wepa.repository.WriterRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.multipart.MultipartFile;
 
 public class NewsValidator {
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private WriterRepository writerRepository;
 
     public List<String> runValidations(String title, String ingress, String text, List<Long> categories, List<Long> writers, MultipartFile img) {
         List<String> errors = new ArrayList<>();

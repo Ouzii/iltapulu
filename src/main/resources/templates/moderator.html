@@ -72,6 +72,9 @@
             <li th:each="category:${categories}">
                 <span  th:text="${category.name}"/>
                 <br/>
+                <form th:action="@{/moderator/category/{id}(id=${category.id})}" th:method="DELETE">
+                    <input type="submit" style="background-color: red" value="Poista"/>
+                </form>
             </li>
         </ul>
 

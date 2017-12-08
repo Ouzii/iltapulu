@@ -3,9 +3,9 @@ package laajaosk.wepa.controller;
 import java.util.ArrayList;
 import java.util.List;
 import laajaosk.wepa.domain.Writer;
-import laajaosk.wepa.repository.CategoryRepository;
 import laajaosk.wepa.repository.NewsRepository;
 import laajaosk.wepa.repository.WriterRepository;
+import laajaosk.wepa.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,11 +26,11 @@ public class RegistrationController {
     @Autowired
     private NewsRepository newsRepository;
     @Autowired
-    private NewsController newsController;
+    private NewsService newsService;
     
     @GetMapping("/register")
     public String register(Model model) {
-        model = newsController.addFooterAndHeaderData(model);
+        model = newsService.addFooterAndHeaderData(model);
         return "registering";
     }
     
@@ -42,11 +42,11 @@ public class RegistrationController {
             writerRepository.save(user);
             messages.add("Onnistui!");
             model.addAttribute("messages", messages);
-            model = newsController.addFooterAndHeaderData(model);
+            model = newsService.addFooterAndHeaderData(model);
         } else {
             messages.add("Salasanat eivät täsmää!");
             model.addAttribute("messages", messages);
-            model = newsController.addFooterAndHeaderData(model);
+            model = newsService.addFooterAndHeaderData(model);
             return "registering";
         }
         
