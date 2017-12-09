@@ -10,38 +10,62 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Palvelu sisäänkirjautumisen logiikalle.
+ * @author oce
+ */
 @Service
-<span class="fc" id="L14">public class LoginService {</span>
+<span class="fc" id="L18">public class LoginService {</span>
 
     @Autowired
     private NewsService newsService;
     @Autowired
     private WriterRepository writerRepository;
 
+    /**
+     * Lisää headerissa ja footerissa tarvittavat tiedot.
+     * @param model
+     * @return
+     */
     public Model addFooterAndHeaderData(Model model) {
-<span class="fc" id="L22">        model = newsService.addFooterAndHeaderData(model);</span>
-<span class="fc" id="L23">        return model;</span>
+<span class="fc" id="L31">        model = newsService.addFooterAndHeaderData(model);</span>
+<span class="fc" id="L32">        return model;</span>
     }
 
+    /**
+     * Uloskirjautuminen. Asettaa sessiolle &quot;user&quot;-arvoksi null.
+     * @param session
+     * @param redirectAttribute
+     * @return
+     */
     public RedirectAttributes logout(HttpSession session, RedirectAttributes redirectAttribute) {
-<span class="nc" id="L27">        List&lt;String&gt; messages = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L28">        session.setAttribute(&quot;user&quot;, null);</span>
-<span class="nc" id="L29">        messages.add(&quot;Kirjauduttu ulos&quot;);</span>
-<span class="nc" id="L30">        redirectAttribute.addFlashAttribute(&quot;messages&quot;, messages);</span>
-<span class="nc" id="L31">        return redirectAttribute;</span>
+<span class="nc" id="L42">        List&lt;String&gt; messages = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L43">        session.setAttribute(&quot;user&quot;, null);</span>
+<span class="nc" id="L44">        messages.add(&quot;Kirjauduttu ulos&quot;);</span>
+<span class="nc" id="L45">        redirectAttribute.addFlashAttribute(&quot;messages&quot;, messages);</span>
+<span class="nc" id="L46">        return redirectAttribute;</span>
     }
 
+    /**
+     * Sisäänkirjautuminen. Jos käyttäjätunnus ja salasana täsmäävät tietokannasta löytyviin, asettaa session
+     * &quot;user&quot;-arvoksi käyttäjän.
+     * @param session
+     * @param username
+     * @param password
+     * @param model
+     * @return
+     */
     public Boolean login(HttpSession session, String username, String password, Model model) {
-<span class="nc" id="L35">        Writer user = writerRepository.findByName(username);</span>
-<span class="nc bnc" id="L36" title="All 2 branches missed.">        if (user == null) {</span>
-<span class="nc" id="L37">            return false;</span>
+<span class="fc" id="L59">        Writer user = writerRepository.findByName(username);</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (user == null) {</span>
+<span class="fc" id="L61">            return false;</span>
         }
 
-<span class="nc bnc" id="L40" title="All 4 branches missed.">        if (user.getPassword().equals(password) &amp;&amp; user.getName().equals(username)) {</span>
-<span class="nc" id="L41">            session.setAttribute(&quot;user&quot;, user);</span>
-<span class="nc" id="L42">            return true;</span>
+<span class="nc bnc" id="L64" title="All 4 branches missed.">        if (user.getPassword().equals(password) &amp;&amp; user.getName().equals(username)) {</span>
+<span class="nc" id="L65">            session.setAttribute(&quot;user&quot;, user);</span>
+<span class="nc" id="L66">            return true;</span>
         } else {
-<span class="nc" id="L44">            return false;</span>
+<span class="nc" id="L68">            return false;</span>
         }
     }
     

@@ -19,8 +19,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+/**
+ * Palvelu uutisten näyttämisessä käytettävälle logiikalle.
+ * @author oce
+ */
 @Service
-<span class="fc" id="L23">public class NewsService {</span>
+<span class="fc" id="L27">public class NewsService {</span>
 
     @Autowired
     private NewsRepository newsRepository;
@@ -31,80 +35,120 @@ import org.springframework.ui.Model;
     @Autowired
     private WriterRepository writerRepository;
 
+    /**
+     * Lisää kaikki olemassaolevat uutiset modelille. Tarkastaa minkä kentän mukaan uutiset järjestetään.
+     * @param model
+     * @param index
+     * @param listedBy
+     * @return
+     */
     public Model addAll(Model model, int index, String listedBy) {
-<span class="fc" id="L35">        List&lt;News&gt; news = newsRepository.findAll();</span>
-<span class="pc bpc" id="L36" title="1 of 2 branches missed.">        if (listedBy.equals(&quot;viewsLastWeek&quot;)) {</span>
-<span class="nc" id="L37">            setViewsForLastWeek(news);</span>
+<span class="fc" id="L46">        List&lt;News&gt; news = newsRepository.findAll();</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (listedBy.equals(&quot;viewsLastWeek&quot;)) {</span>
+<span class="nc" id="L48">            setViewsForLastWeek(news);</span>
         }
-<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (news.size() &gt; 0) {</span>
-<span class="fc" id="L40">            Pageable pageable = PageRequest.of(index - 1, 10, Sort.Direction.DESC, listedBy);</span>
-<span class="fc" id="L41">            model.addAttribute(&quot;news&quot;, newsRepository.findAll(pageable));</span>
-<span class="fc" id="L42">        } else {</span>
-<span class="nc" id="L43">            model.addAttribute(&quot;news&quot;, newsRepository.findAll());</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (news.size() &gt; 0) {</span>
+<span class="fc" id="L51">            Pageable pageable = PageRequest.of(index - 1, 10, Sort.Direction.DESC, listedBy);</span>
+<span class="fc" id="L52">            model.addAttribute(&quot;news&quot;, newsRepository.findAll(pageable));</span>
+<span class="fc" id="L53">        } else {</span>
+<span class="nc" id="L54">            model.addAttribute(&quot;news&quot;, newsRepository.findAll());</span>
         }
-<span class="fc" id="L45">        return model;</span>
+<span class="fc" id="L56">        return model;</span>
     }
 
+    /**
+     * Lisätään modelille kaikki haluttuun kategoriaan kuuluvat uutiset. Tarkastetaan myös minkä perusteella
+     * uutiset järjestetään.
+     * @param model
+     * @param category
+     * @param index
+     * @param listedBy
+     * @return
+     */
     public Model addFromCategory(Model model, String category, int index, String listedBy) {
-<span class="fc" id="L49">        ArrayList&lt;Category&gt; categories = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L50">        categories.add(categoryRepository.findByName(category));</span>
-<span class="fc" id="L51">        List&lt;News&gt; news = newsRepository.findByCategories(categories);</span>
+<span class="fc" id="L69">        ArrayList&lt;Category&gt; categories = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L70">        categories.add(categoryRepository.findByName(category));</span>
+<span class="fc" id="L71">        List&lt;News&gt; news = newsRepository.findByCategories(categories);</span>
 
-<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (listedBy.equals(&quot;viewsLastWeek&quot;)) {</span>
-<span class="nc" id="L54">            setViewsForLastWeek(news);</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if (listedBy.equals(&quot;viewsLastWeek&quot;)) {</span>
+<span class="nc" id="L74">            setViewsForLastWeek(news);</span>
         }
-<span class="pc bpc" id="L56" title="1 of 2 branches missed.">        if (news.size() &gt; 0) {</span>
-<span class="fc" id="L57">            Pageable pageable = PageRequest.of(index - 1, 10, Sort.Direction.DESC, listedBy);</span>
-<span class="fc" id="L58">            model.addAttribute(&quot;news&quot;, newsRepository.findByCategories(categories, pageable));</span>
-<span class="fc" id="L59">        } else {</span>
-<span class="nc" id="L60">            model.addAttribute(&quot;news&quot;, newsRepository.findByCategories(categories));</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (news.size() &gt; 0) {</span>
+<span class="fc" id="L77">            Pageable pageable = PageRequest.of(index - 1, 10, Sort.Direction.DESC, listedBy);</span>
+<span class="fc" id="L78">            model.addAttribute(&quot;news&quot;, newsRepository.findByCategories(categories, pageable));</span>
+<span class="fc" id="L79">        } else {</span>
+<span class="nc" id="L80">            model.addAttribute(&quot;news&quot;, newsRepository.findByCategories(categories));</span>
         }
-<span class="fc" id="L62">        return model;</span>
+<span class="fc" id="L82">        return model;</span>
     }
 
+    /**
+     * Haetaan uutisen &quot;ViewsLastWeek&quot; -attribuutille arvo tietokannasta. Toistetaan kaikille halutuille uutisille.
+     */
     private void setViewsForLastWeek(List&lt;News&gt; news) {
-<span class="fc bfc" id="L66" title="All 2 branches covered.">        for (News aNew : news) {</span>
-<span class="fc" id="L67">            aNew.setViewsLastWeek(viewRepository.findByANewAndDateTimeAfter(aNew, new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7))).size());</span>
-<span class="fc" id="L68">        }</span>
-<span class="fc" id="L69">    }</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        for (News aNew : news) {</span>
+<span class="fc" id="L90">            aNew.setViewsLastWeek(viewRepository.findByANewAndDateTimeAfter(aNew, new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7))).size());</span>
+<span class="fc" id="L91">        }</span>
+<span class="fc" id="L92">    }</span>
 
+    /**
+     * Lisätään headerissa ja footerissa käytettävä data, esim. kaikki kategoriat ja eri lailla listatut 5 uutista.
+     * @param model
+     * @return
+     */
     public Model addFooterAndHeaderData(Model model) {
-<span class="fc" id="L72">        List&lt;News&gt; news = newsRepository.findAll();</span>
-<span class="fc" id="L73">        model.addAttribute(&quot;categories&quot;, categoryRepository.findAll());</span>
-<span class="fc" id="L74">        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, &quot;published&quot;);</span>
-<span class="fc" id="L75">        model.addAttribute(&quot;newsByDate&quot;, newsRepository.findAll(pageable));</span>
-<span class="fc" id="L76">        setViewsForLastWeek(news);</span>
-<span class="fc" id="L77">        Pageable pageable2 = PageRequest.of(0, 5, Sort.Direction.DESC, &quot;viewsLastWeek&quot;);</span>
-<span class="fc" id="L78">        model.addAttribute(&quot;newsByViews&quot;, newsRepository.findAll(pageable2));</span>
-<span class="fc" id="L79">        return model;</span>
+<span class="fc" id="L100">        List&lt;News&gt; news = newsRepository.findAll();</span>
+<span class="fc" id="L101">        model.addAttribute(&quot;categories&quot;, categoryRepository.findAll());</span>
+<span class="fc" id="L102">        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, &quot;published&quot;);</span>
+<span class="fc" id="L103">        model.addAttribute(&quot;newsByDate&quot;, newsRepository.findAll(pageable));</span>
+<span class="fc" id="L104">        setViewsForLastWeek(news);</span>
+<span class="fc" id="L105">        Pageable pageable2 = PageRequest.of(0, 5, Sort.Direction.DESC, &quot;viewsLastWeek&quot;);</span>
+<span class="fc" id="L106">        model.addAttribute(&quot;newsByViews&quot;, newsRepository.findAll(pageable2));</span>
+<span class="fc" id="L107">        return model;</span>
     }
 
+    /**
+     * Hae tiettyyn kategoriaan liittyvien uutisten määrä. Käytetään sivuttamisessa.
+     * @param model
+     * @param categoryName
+     * @return
+     */
     public Model findCategoryListSize(Model model, String categoryName) {
-<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (categoryName.equals(&quot;Uutiset&quot;)) {</span>
-<span class="fc" id="L84">            model.addAttribute(&quot;newsCount&quot;, newsRepository.findAll().size());</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (categoryName.equals(&quot;Uutiset&quot;)) {</span>
+<span class="fc" id="L118">            model.addAttribute(&quot;newsCount&quot;, newsRepository.findAll().size());</span>
         } else {
-<span class="fc" id="L86">            ArrayList&lt;Category&gt; categories = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L87">            categories.add(categoryRepository.findByName(categoryName));</span>
-<span class="fc" id="L88">            List&lt;News&gt; news = newsRepository.findByCategories(categories);</span>
-<span class="fc" id="L89">            model.addAttribute(&quot;newsCount&quot;, news.size());</span>
+<span class="fc" id="L120">            ArrayList&lt;Category&gt; categories = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L121">            categories.add(categoryRepository.findByName(categoryName));</span>
+<span class="fc" id="L122">            List&lt;News&gt; news = newsRepository.findByCategories(categories);</span>
+<span class="fc" id="L123">            model.addAttribute(&quot;newsCount&quot;, news.size());</span>
         }
-<span class="fc" id="L91">        return model;</span>
+<span class="fc" id="L125">        return model;</span>
     }
 
+    /**
+     * Luo etusivun model, eli lisää 5 tuoreinta uutista modelille.
+     * @param model
+     * @return
+     */
     public Model makeIndexModel(Model model) {
-<span class="fc" id="L95">        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, &quot;published&quot;);</span>
-<span class="fc" id="L96">        model.addAttribute(&quot;news&quot;, newsRepository.findAll(pageable));</span>
-<span class="fc" id="L97">        model = addFooterAndHeaderData(model);</span>
-<span class="fc" id="L98">        return model;</span>
+<span class="fc" id="L134">        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, &quot;published&quot;);</span>
+<span class="fc" id="L135">        model.addAttribute(&quot;news&quot;, newsRepository.findAll(pageable));</span>
+<span class="fc" id="L136">        model = addFooterAndHeaderData(model);</span>
+<span class="fc" id="L137">        return model;</span>
     }
 
+    /**
+     * Lisää halutulle uutiselle uusi katselukerta.
+     * @param id
+     * @return
+     */
     public News addViewForaNew(Long id) {
-<span class="fc" id="L102">        News aNew = newsRepository.getOne(id);</span>
-<span class="fc" id="L103">        View view = new View(aNew, new Date());</span>
-<span class="fc" id="L104">        viewRepository.save(view);</span>
-<span class="fc" id="L105">        aNew.getViews().add(view);</span>
-<span class="fc" id="L106">        newsRepository.save(aNew);</span>
-<span class="fc" id="L107">        return aNew;</span>
+<span class="fc" id="L146">        News aNew = newsRepository.getOne(id);</span>
+<span class="fc" id="L147">        View view = new View(aNew, new Date());</span>
+<span class="fc" id="L148">        viewRepository.save(view);</span>
+<span class="fc" id="L149">        aNew.getViews().add(view);</span>
+<span class="fc" id="L150">        newsRepository.save(aNew);</span>
+<span class="fc" id="L151">        return aNew;</span>
     }
 
 //    public void initiateTestData() {

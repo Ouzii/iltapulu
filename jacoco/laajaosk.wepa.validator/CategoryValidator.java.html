@@ -4,29 +4,39 @@ import java.util.ArrayList;
 import java.util.List;
 import laajaosk.wepa.domain.Category;
 
-<span class="fc" id="L7">public class CategoryValidator {</span>
+/**
+ * Kategorian validaattori.
+ * @author oce
+ */
+<span class="fc" id="L11">public class CategoryValidator {</span>
     
-    
+    /**
+     * Validoidaan kategorian nimen oikeellisuus ja kategorioiden maksimimäärä. Katsotaan myös, ettei kyseistä
+     * kategoriaa ole jo olemassa.
+     * @param name
+     * @param categories
+     * @return
+     */
     public List&lt;String&gt; validateCategory(String name, List&lt;Category&gt; categories) {
-<span class="fc" id="L11">        List&lt;String&gt; errors = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L21">        List&lt;String&gt; errors = new ArrayList&lt;&gt;();</span>
 
-<span class="fc bfc" id="L13" title="All 2 branches covered.">        if (categories.size() &gt;= 6) {</span>
-<span class="fc" id="L14">            errors.add(&quot;Kategorioiden maksimimäärä on 6! Poista vanha kategoria ennen uuden luomista.&quot;);</span>
-<span class="fc" id="L15">            return errors;</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">        if (categories.size() &gt;= 6) {</span>
+<span class="fc" id="L24">            errors.add(&quot;Kategorioiden maksimimäärä on 6! Poista vanha kategoria ennen uuden luomista.&quot;);</span>
+<span class="fc" id="L25">            return errors;</span>
         }
-<span class="fc bfc" id="L17" title="All 4 branches covered.">        if (name.isEmpty() || name.length() &gt; 12) {</span>
-<span class="fc" id="L18">            errors.add(&quot;Kategorian nimen pituus on oltava 1-12 merkkiä!&quot;);</span>
-        }
-        
-<span class="fc" id="L21">        List&lt;String&gt; categoryNames = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L22" title="All 2 branches covered.">        for (Category category : categories) {</span>
-<span class="fc" id="L23">            categoryNames.add(category.getName());</span>
-<span class="fc" id="L24">        }</span>
-<span class="fc bfc" id="L25" title="All 2 branches covered.">        if (categoryNames.contains(name)) {</span>
-<span class="fc" id="L26">            errors.add(&quot;Kategoria on jo olemassa!&quot;);</span>
+<span class="fc bfc" id="L27" title="All 4 branches covered.">        if (name.isEmpty() || name.length() &gt; 12) {</span>
+<span class="fc" id="L28">            errors.add(&quot;Kategorian nimen pituus on oltava 1-12 merkkiä!&quot;);</span>
         }
         
-<span class="fc" id="L29">        return errors;</span>
+<span class="fc" id="L31">        List&lt;String&gt; categoryNames = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        for (Category category : categories) {</span>
+<span class="fc" id="L33">            categoryNames.add(category.getName());</span>
+<span class="fc" id="L34">        }</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (categoryNames.contains(name)) {</span>
+<span class="fc" id="L36">            errors.add(&quot;Kategoria on jo olemassa!&quot;);</span>
+        }
+        
+<span class="fc" id="L39">        return errors;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

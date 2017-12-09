@@ -18,79 +18,129 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Kontrolleri, joka huolehtii kirjautumista vaativista toiminnoista, eli uutisen luominen/muokkaaminen yms.
+ * @author oce
+ */
 @Controller
 @Transactional
-<span class="fc" id="L23">public class ModeratorController {</span>
+<span class="fc" id="L27">public class ModeratorController {</span>
 
     @Autowired
     private WriterRepository writerRepository;
     @Autowired
     private ModeratorService moderatorService;
 
+    /**
+     * Luo moderaattorisivun.
+     * @param model
+     * @return
+     */
     @GetMapping(&quot;/moderator&quot;)
     public String list(Model model) {
-<span class="nc" id="L32">        moderatorService.addCategoriesAndWriters(model);</span>
-<span class="nc" id="L33">        return &quot;moderator&quot;;</span>
+<span class="nc" id="L41">        moderatorService.addCategoriesAndWriters(model);</span>
+<span class="nc" id="L42">        return &quot;moderator&quot;;</span>
     }
 
+    /**
+     * 
+     * @param name
+     * @return
+     */
     @PostMapping(&quot;/moderator/writer&quot;)
     public String addWriter(@RequestParam String name) {
-<span class="nc bnc" id="L38" title="All 2 branches missed.">        if (writerRepository.findByName(name) == null) {</span>
-<span class="nc" id="L39">            Writer w = new Writer();</span>
-<span class="nc" id="L40">            w.setName(name);</span>
-<span class="nc" id="L41">            writerRepository.save(w);</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (writerRepository.findByName(name) == null) {</span>
+<span class="nc" id="L53">            Writer w = new Writer();</span>
+<span class="nc" id="L54">            w.setName(name);</span>
+<span class="nc" id="L55">            writerRepository.save(w);</span>
         }
 
-<span class="nc" id="L44">        return &quot;redirect:/moderator&quot;;</span>
+<span class="nc" id="L58">        return &quot;redirect:/moderator&quot;;</span>
     }
 
-
-
+    /**
+     * Luo uutisen moderatorServicen avulla.
+     * @param redirectAttribute
+     * @param model
+     * @param title
+     * @param ingress
+     * @param text
+     * @param img
+     * @param writers
+     * @param categories
+     * @return
+     * @throws IOException
+     */
     @PostMapping(&quot;/moderator/news&quot;)
     public String add(RedirectAttributes redirectAttribute, Model model, @RequestParam String title, @RequestParam String ingress, @RequestParam String text, @RequestParam(&quot;img&quot;) MultipartFile img, @RequestParam(value = &quot;writers&quot;, required = false) List&lt;Long&gt; writers, @RequestParam(value = &quot;categories&quot;, required = false) List&lt;Long&gt; categories) throws IOException {
-<span class="nc" id="L51">        List&lt;String&gt; errors = moderatorService.addNews(title, ingress, text, writers, categories, img);</span>
-<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (!errors.isEmpty()) {</span>
-<span class="nc" id="L53">            redirectAttribute.addFlashAttribute(&quot;messages&quot;, errors);</span>
-<span class="nc" id="L54">            moderatorService.addCategoriesAndWriters(redirectAttribute);</span>
-<span class="nc" id="L55">            return &quot;redirect:/moderator&quot;;</span>
+<span class="nc" id="L76">        List&lt;String&gt; errors = moderatorService.addNews(title, ingress, text, writers, categories, img);</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (!errors.isEmpty()) {</span>
+<span class="nc" id="L78">            redirectAttribute.addFlashAttribute(&quot;messages&quot;, errors);</span>
+<span class="nc" id="L79">            moderatorService.addCategoriesAndWriters(redirectAttribute);</span>
+<span class="nc" id="L80">            return &quot;redirect:/moderator&quot;;</span>
         }
 
-<span class="nc" id="L58">        List&lt;String&gt; messages = moderatorService.addToMessages(&quot;Uutinen &quot; + title + &quot; luotu!&quot;, new ArrayList&lt;&gt;());</span>
-<span class="nc" id="L59">        redirectAttribute.addFlashAttribute(&quot;messages&quot;, messages);</span>
-<span class="nc" id="L60">        return &quot;redirect:/moderator&quot;;</span>
+<span class="nc" id="L83">        List&lt;String&gt; messages = moderatorService.addToMessages(&quot;Uutinen &quot; + title + &quot; luotu!&quot;, new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L84">        redirectAttribute.addFlashAttribute(&quot;messages&quot;, messages);</span>
+<span class="nc" id="L85">        return &quot;redirect:/moderator&quot;;</span>
     }
 
+    /**
+     * Poistaa uutisen.
+     * @param redirectAttribute
+     * @param id
+     * @return
+     */
     @DeleteMapping(&quot;/news/{id}&quot;)
     public String delete(RedirectAttributes redirectAttribute, @PathVariable Long id) {
-<span class="nc" id="L65">        String title = moderatorService.deleteNews(id);</span>
-<span class="nc" id="L66">        List&lt;String&gt; messages = moderatorService.addToMessages(&quot;\&quot;&quot; + title + &quot;\&quot; on poistettu onnistuneesti!&quot;, new ArrayList&lt;&gt;());</span>
-<span class="nc" id="L67">        redirectAttribute.addFlashAttribute(&quot;messages&quot;, messages);</span>
-<span class="nc" id="L68">        return &quot;redirect:/&quot;;</span>
+<span class="nc" id="L96">        String title = moderatorService.deleteNews(id);</span>
+<span class="nc" id="L97">        List&lt;String&gt; messages = moderatorService.addToMessages(&quot;\&quot;&quot; + title + &quot;\&quot; on poistettu onnistuneesti!&quot;, new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L98">        redirectAttribute.addFlashAttribute(&quot;messages&quot;, messages);</span>
+<span class="nc" id="L99">        return &quot;redirect:/&quot;;</span>
     }
 
+    /**
+     * Luo uutisen muokkaussivun.
+     * @param model
+     * @param id
+     * @return
+     */
     @GetMapping(&quot;/news/{id}/modify&quot;)
     public String modify(Model model, @PathVariable Long id) {
-<span class="nc" id="L73">        moderatorService.addaNewToModel(model, id);</span>
-<span class="nc" id="L74">        moderatorService.addCategoriesAndWriters(model);</span>
-<span class="nc" id="L75">        return &quot;modify&quot;;</span>
+<span class="nc" id="L110">        moderatorService.addaNewToModel(model, id);</span>
+<span class="nc" id="L111">        moderatorService.addCategoriesAndWriters(model);</span>
+<span class="nc" id="L112">        return &quot;modify&quot;;</span>
     }
 
+    /**
+     * Muokkaa uutista moderatorServicen avulla.
+     * @param redirectAttribute
+     * @param id
+     * @param title
+     * @param ingress
+     * @param text
+     * @param img
+     * @param writers
+     * @param categories
+     * @return
+     * @throws IOException
+     */
     @PostMapping(&quot;/moderator/news/{id}&quot;)
     public String postModify(RedirectAttributes redirectAttribute, @PathVariable Long id, @RequestParam String title, @RequestParam String ingress, @RequestParam String text, @RequestParam(&quot;img&quot;) MultipartFile img, @RequestParam(value = &quot;writers&quot;, required = false) List&lt;Long&gt; writers, @RequestParam(value = &quot;categories&quot;, required = false) List&lt;Long&gt; categories) throws IOException {
-<span class="nc" id="L80">        List&lt;String&gt; errors = moderatorService.ModifyNews(id, title, ingress, text, writers, categories, img);</span>
+<span class="nc" id="L130">        List&lt;String&gt; errors = moderatorService.ModifyNews(id, title, ingress, text, writers, categories, img);</span>
 
-<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (!errors.isEmpty()) {</span>
-<span class="nc" id="L83">            redirectAttribute.addFlashAttribute(&quot;messages&quot;, errors);</span>
-<span class="nc" id="L84">            moderatorService.addCategoriesAndWriters(redirectAttribute);</span>
-<span class="nc" id="L85">            return &quot;redirect:/news/&quot; + id;</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        if (!errors.isEmpty()) {</span>
+<span class="nc" id="L133">            redirectAttribute.addFlashAttribute(&quot;messages&quot;, errors);</span>
+<span class="nc" id="L134">            moderatorService.addCategoriesAndWriters(redirectAttribute);</span>
+<span class="nc" id="L135">            return &quot;redirect:/news/&quot; + id;</span>
         }
 
-<span class="nc" id="L88">        moderatorService.ModifyNews(id, title, ingress, text, writers, categories, img);</span>
+<span class="nc" id="L138">        moderatorService.ModifyNews(id, title, ingress, text, writers, categories, img);</span>
 
-<span class="nc" id="L90">        List&lt;String&gt; messages = moderatorService.addToMessages(&quot;Muokkaus onnistui!&quot;, new ArrayList&lt;&gt;());</span>
-<span class="nc" id="L91">        redirectAttribute.addFlashAttribute(&quot;messages&quot;, messages);</span>
+<span class="nc" id="L140">        List&lt;String&gt; messages = moderatorService.addToMessages(&quot;Muokkaus onnistui!&quot;, new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L141">        redirectAttribute.addFlashAttribute(&quot;messages&quot;, messages);</span>
 
-<span class="nc" id="L93">        return &quot;redirect:/news/&quot; + id;</span>
+<span class="nc" id="L143">        return &quot;redirect:/news/&quot; + id;</span>
     }
 
 }

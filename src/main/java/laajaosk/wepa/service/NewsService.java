@@ -19,6 +19,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+/**
+ * Palvelu uutisten näyttämisessä käytettävälle logiikalle.
+ * @author oce
+ */
 @Service
 public class NewsService {
 
@@ -31,6 +35,13 @@ public class NewsService {
     @Autowired
     private WriterRepository writerRepository;
 
+    /**
+     * Lisää kaikki olemassaolevat uutiset modelille. Tarkastaa minkä kentän mukaan uutiset järjestetään.
+     * @param model
+     * @param index
+     * @param listedBy
+     * @return
+     */
     public Model addAll(Model model, int index, String listedBy) {
         List<News> news = newsRepository.findAll();
         if (listedBy.equals("viewsLastWeek")) {
@@ -45,6 +56,15 @@ public class NewsService {
         return model;
     }
 
+    /**
+     * Lisätään modelille kaikki haluttuun kategoriaan kuuluvat uutiset. Tarkastetaan myös minkä perusteella
+     * uutiset järjestetään.
+     * @param model
+     * @param category
+     * @param index
+     * @param listedBy
+     * @return
+     */
     public Model addFromCategory(Model model, String category, int index, String listedBy) {
         ArrayList<Category> categories = new ArrayList<>();
         categories.add(categoryRepository.findByName(category));
@@ -62,12 +82,20 @@ public class NewsService {
         return model;
     }
 
+    /**
+     * Haetaan uutisen "ViewsLastWeek" -attribuutille arvo tietokannasta. Toistetaan kaikille halutuille uutisille.
+     */
     private void setViewsForLastWeek(List<News> news) {
         for (News aNew : news) {
             aNew.setViewsLastWeek(viewRepository.findByANewAndDateTimeAfter(aNew, new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7))).size());
         }
     }
 
+    /**
+     * Lisätään headerissa ja footerissa käytettävä data, esim. kaikki kategoriat ja eri lailla listatut 5 uutista.
+     * @param model
+     * @return
+     */
     public Model addFooterAndHeaderData(Model model) {
         List<News> news = newsRepository.findAll();
         model.addAttribute("categories", categoryRepository.findAll());
@@ -79,6 +107,12 @@ public class NewsService {
         return model;
     }
 
+    /**
+     * Hae tiettyyn kategoriaan liittyvien uutisten määrä. Käytetään sivuttamisessa.
+     * @param model
+     * @param categoryName
+     * @return
+     */
     public Model findCategoryListSize(Model model, String categoryName) {
         if (categoryName.equals("Uutiset")) {
             model.addAttribute("newsCount", newsRepository.findAll().size());
@@ -91,6 +125,11 @@ public class NewsService {
         return model;
     }
 
+    /**
+     * Luo etusivun model, eli lisää 5 tuoreinta uutista modelille.
+     * @param model
+     * @return
+     */
     public Model makeIndexModel(Model model) {
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "published");
         model.addAttribute("news", newsRepository.findAll(pageable));
@@ -98,6 +137,11 @@ public class NewsService {
         return model;
     }
 
+    /**
+     * Lisää halutulle uutiselle uusi katselukerta.
+     * @param id
+     * @return
+     */
     public News addViewForaNew(Long id) {
         News aNew = newsRepository.getOne(id);
         View view = new View(aNew, new Date());

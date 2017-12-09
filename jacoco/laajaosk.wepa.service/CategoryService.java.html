@@ -10,50 +10,71 @@ import laajaosk.wepa.validator.CategoryValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Palvelu kategorioihin liittyvälle logiikalle.
+ * @author oce
+ */
 @Service
-<span class="fc" id="L14">public class CategoryService {</span>
+<span class="fc" id="L18">public class CategoryService {</span>
 
-<span class="fc" id="L16">    private CategoryValidator categoryValidator = new CategoryValidator();</span>
+<span class="fc" id="L20">    private CategoryValidator categoryValidator = new CategoryValidator();</span>
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
     private NewsRepository newsRepository;
 
+    /**
+     * Lisää merkkijono listalle ja palauta lista.
+     * @param message
+     * @param messages
+     * @return
+     */
     public List&lt;String&gt; addToMessages(String message, List&lt;String&gt; messages) {
-<span class="fc" id="L23">        messages.add(message);</span>
-<span class="fc" id="L24">        return messages;</span>
+<span class="fc" id="L33">        messages.add(message);</span>
+<span class="fc" id="L34">        return messages;</span>
     }
 
+    /**
+     * Kategorian lisääminen. Kutsuu validaattoria tarkastamaan annetut arvot. Jos virheitä löytyy, palautetaan lista virheistä.
+     * Muuten luodaan uusi kategoria ja tallennetaan se tietokantaan.
+     * @param name
+     * @return
+     */
     public List&lt;String&gt; addCategory(String name) {
-<span class="fc" id="L28">        List&lt;String&gt; errors = categoryValidator.validateCategory(name, categoryRepository.findAll());</span>
-<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (!errors.isEmpty()) {</span>
-<span class="fc" id="L30">            return errors;</span>
+<span class="fc" id="L44">        List&lt;String&gt; errors = categoryValidator.validateCategory(name, categoryRepository.findAll());</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (!errors.isEmpty()) {</span>
+<span class="fc" id="L46">            return errors;</span>
         }
-<span class="fc" id="L32">        Category c = new Category();</span>
-<span class="fc" id="L33">        c.setName(name);</span>
-<span class="fc" id="L34">        categoryRepository.save(c);</span>
+<span class="fc" id="L48">        Category c = new Category();</span>
+<span class="fc" id="L49">        c.setName(name);</span>
+<span class="fc" id="L50">        categoryRepository.save(c);</span>
 
-<span class="fc" id="L36">        return errors;</span>
+<span class="fc" id="L52">        return errors;</span>
     }
 
+    /**
+     * Kategorian poistaminen. Poistetaan riippuvuudet kategorialta ja kategoriaan. Palautetaan poistetun kategorian nimi.
+     * @param id
+     * @return
+     */
     public String deleteCategory(Long id) {
-<span class="fc" id="L40">        Category category = categoryRepository.getOne(id);</span>
-<span class="fc" id="L41">        String name = &quot;&quot;;</span>
-<span class="pc bpc" id="L42" title="1 of 2 branches missed.">        if (category != null) {</span>
-<span class="fc" id="L43">            name = category.getName();</span>
-<span class="fc" id="L44">            List&lt;Category&gt; categories = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L45">            categories.add(category);</span>
-<span class="fc" id="L46">            List&lt;News&gt; news = newsRepository.findByCategories(categories);</span>
-<span class="pc bpc" id="L47" title="1 of 2 branches missed.">            if (!news.isEmpty()) {</span>
-<span class="nc bnc" id="L48" title="All 2 branches missed.">                for (News aNew : news) {</span>
-<span class="nc" id="L49">                    aNew.getCategories().remove(category);</span>
-<span class="nc" id="L50">                    newsRepository.save(aNew);</span>
-<span class="nc" id="L51">                }</span>
+<span class="fc" id="L61">        Category category = categoryRepository.getOne(id);</span>
+<span class="fc" id="L62">        String name = &quot;&quot;;</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">        if (category != null) {</span>
+<span class="fc" id="L64">            name = category.getName();</span>
+<span class="fc" id="L65">            List&lt;Category&gt; categories = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L66">            categories.add(category);</span>
+<span class="fc" id="L67">            List&lt;News&gt; news = newsRepository.findByCategories(categories);</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">            if (!news.isEmpty()) {</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                for (News aNew : news) {</span>
+<span class="nc" id="L70">                    aNew.getCategories().remove(category);</span>
+<span class="nc" id="L71">                    newsRepository.save(aNew);</span>
+<span class="nc" id="L72">                }</span>
             }
-<span class="fc" id="L53">            categoryRepository.delete(category);</span>
+<span class="fc" id="L74">            categoryRepository.delete(category);</span>
         }
 
-<span class="fc" id="L56">        return name;</span>
+<span class="fc" id="L77">        return name;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

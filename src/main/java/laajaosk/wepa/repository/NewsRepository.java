@@ -10,17 +10,38 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repositorio uutiselle.
+ * @author oce
+ */
 @Repository
 public interface NewsRepository extends JpaRepository<News, Long> {
 
+    /**
+     * Hae uutisia, jotka liittyvät tiettyihin kategorioihin.
+     * @param categories
+     * @return
+     */
     List<News> findByCategories(List<Category> categories);
 
-    List<News> findByCategories(List<Category> categories, Sort sort);
 
+    /**
+     * Hae uutisia, jotka liittyvät tiettyihin kategorioihin ja liitä haluttu Pageable-olio.
+     * @param categories
+     * @param pageable
+     * @return
+     */
     List<News> findByCategories(List<Category> categories, Pageable pageable);
-
-    List<News> findByCategoriesAndPublishedAfter(List<Category> categories, Date date, Sort sort);
     
+    /**
+     * Hae uutinen otsikon perusteella.
+     * @param title
+     * @return
+     */
     News findByTitle(String title);
+    
+    List<News> findByTitleContaining(String searchWord);
+    List<News> findByIngressContaining(String searchWord);
+    List<News> findByTextContaining(String searchWord);
 
 }

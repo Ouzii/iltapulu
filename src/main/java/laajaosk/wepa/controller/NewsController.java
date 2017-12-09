@@ -9,6 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+/**
+ * Kontrolleri, joka huolehtii uutisten näyttämisestä.
+ * @author oce
+ */
 @Controller
 @Transactional
 public class NewsController {
@@ -16,6 +20,11 @@ public class NewsController {
     @Autowired
     private NewsService newsService;
 
+    /**
+     * Luo etusivun.
+     * @param model
+     * @return
+     */
     @GetMapping("/")
     public String index(Model model) {
 //        newsService.initiateTestData();
@@ -23,7 +32,12 @@ public class NewsController {
         return "index";
     }
 
-
+    /**
+     * Luo yksittäisen uutisen katselusivun.
+     * @param model
+     * @param id
+     * @return
+     */
     @GetMapping("/news/{id}")
     public String show(Model model, @PathVariable Long id) {
         News aNew = newsService.addViewForaNew(id);
@@ -32,6 +46,14 @@ public class NewsController {
         return "article";
     }
 
+    /**
+     * Listaa uutiset kategorian perusteella. Järjestystä voi myös muuttaa listedBy-attribuutin avulla.
+     * @param model
+     * @param name
+     * @param index
+     * @param listedBy
+     * @return
+     */
     @GetMapping("/news/{name}/list/{index}/{listedBy}")
     public String listByCategory(Model model, @PathVariable String name, @PathVariable int index, @PathVariable String listedBy) {
 

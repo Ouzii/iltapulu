@@ -11,13 +11,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Kontrolleri, joka huolehtii kategorioiden luomisesta ja poistamisesta.
+ * @author oce
+ */
 @Controller
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
 
-    
+    /**
+     * Kategorian luominen.
+     * @param redirectAttribute
+     * @param name
+     * @return
+     */
     @PostMapping("/moderator/category")
     public String addCategory(RedirectAttributes redirectAttribute, @RequestParam String name) {
         List<String> errors = categoryService.addCategory(name);
@@ -30,6 +39,12 @@ public class CategoryController {
         return "redirect:/moderator";
     }
 
+    /**
+     * Kategorian poistaminen.
+     * @param redirectAttribute
+     * @param id
+     * @return
+     */
     @DeleteMapping("/moderator/category/{id}")
     public String deleteCategory(RedirectAttributes redirectAttribute, @PathVariable Long id) {
         String name = categoryService.deleteCategory(id);

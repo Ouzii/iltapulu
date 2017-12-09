@@ -8,16 +8,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-
+/**
+ * Tietokanta entiteetti kategorialle.
+ * @author oce
+ */
 @Entity
-<span class="pc bpc" id="L13" title="21 of 22 branches missed.">@Data</span>
-<span class="fc" id="L14">@NoArgsConstructor</span>
-<span class="nc" id="L15">@AllArgsConstructor</span>
+<span class="pc bpc" id="L16" title="21 of 22 branches missed.">@Data</span>
+<span class="fc" id="L17">@NoArgsConstructor</span>
+<span class="nc" id="L18">@AllArgsConstructor</span>
 public class Category extends AbstractPersistable&lt;Long&gt; {
 
     @ManyToMany(mappedBy = &quot;categories&quot;)
-<span class="fc" id="L19">    private List&lt;News&gt; news;</span>
+<span class="fc" id="L22">    private List&lt;News&gt; news;</span>
     
-<span class="fc" id="L21">    private String name;</span>
+<span class="fc" id="L24">    private String name;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

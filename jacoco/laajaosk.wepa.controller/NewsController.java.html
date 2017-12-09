@@ -9,43 +9,65 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+/**
+ * Kontrolleri, joka huolehtii uutisten näyttämisestä.
+ * @author oce
+ */
 @Controller
 @Transactional
-<span class="fc" id="L14">public class NewsController {</span>
+<span class="fc" id="L18">public class NewsController {</span>
     
     @Autowired
     private NewsService newsService;
 
+    /**
+     * Luo etusivun.
+     * @param model
+     * @return
+     */
     @GetMapping(&quot;/&quot;)
     public String index(Model model) {
 //        newsService.initiateTestData();
-<span class="fc" id="L22">        model = newsService.makeIndexModel(model);</span>
-<span class="fc" id="L23">        return &quot;index&quot;;</span>
+<span class="fc" id="L31">        model = newsService.makeIndexModel(model);</span>
+<span class="fc" id="L32">        return &quot;index&quot;;</span>
     }
 
-
+    /**
+     * Luo yksittäisen uutisen katselusivun.
+     * @param model
+     * @param id
+     * @return
+     */
     @GetMapping(&quot;/news/{id}&quot;)
     public String show(Model model, @PathVariable Long id) {
-<span class="nc" id="L29">        News aNew = newsService.addViewForaNew(id);</span>
-<span class="nc" id="L30">        model.addAttribute(&quot;aNew&quot;, aNew);</span>
-<span class="nc" id="L31">        model = newsService.addFooterAndHeaderData(model);</span>
-<span class="nc" id="L32">        return &quot;article&quot;;</span>
+<span class="nc" id="L43">        News aNew = newsService.addViewForaNew(id);</span>
+<span class="nc" id="L44">        model.addAttribute(&quot;aNew&quot;, aNew);</span>
+<span class="nc" id="L45">        model = newsService.addFooterAndHeaderData(model);</span>
+<span class="nc" id="L46">        return &quot;article&quot;;</span>
     }
 
+    /**
+     * Listaa uutiset kategorian perusteella. Järjestystä voi myös muuttaa listedBy-attribuutin avulla.
+     * @param model
+     * @param name
+     * @param index
+     * @param listedBy
+     * @return
+     */
     @GetMapping(&quot;/news/{name}/list/{index}/{listedBy}&quot;)
     public String listByCategory(Model model, @PathVariable String name, @PathVariable int index, @PathVariable String listedBy) {
 
-<span class="nc bnc" id="L38" title="All 2 branches missed.">        if (name.equals(&quot;Uutiset&quot;)) {</span>
-<span class="nc" id="L39">            model = newsService.addAll(model, index, listedBy);</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (name.equals(&quot;Uutiset&quot;)) {</span>
+<span class="nc" id="L61">            model = newsService.addAll(model, index, listedBy);</span>
         } else {
-<span class="nc" id="L41">            model = newsService.addFromCategory(model, name, index, listedBy);</span>
+<span class="nc" id="L63">            model = newsService.addFromCategory(model, name, index, listedBy);</span>
         }
-<span class="nc" id="L43">        model.addAttribute(&quot;title&quot;, name);</span>
-<span class="nc" id="L44">        model.addAttribute(&quot;index&quot;, index);</span>
-<span class="nc" id="L45">        model.addAttribute(&quot;listedBy&quot;, listedBy);</span>
-<span class="nc" id="L46">        model = newsService.findCategoryListSize(model, name);</span>
-<span class="nc" id="L47">        model = newsService.addFooterAndHeaderData(model);</span>
-<span class="nc" id="L48">        return &quot;news&quot;;</span>
+<span class="nc" id="L65">        model.addAttribute(&quot;title&quot;, name);</span>
+<span class="nc" id="L66">        model.addAttribute(&quot;index&quot;, index);</span>
+<span class="nc" id="L67">        model.addAttribute(&quot;listedBy&quot;, listedBy);</span>
+<span class="nc" id="L68">        model = newsService.findCategoryListSize(model, name);</span>
+<span class="nc" id="L69">        model = newsService.addFooterAndHeaderData(model);</span>
+<span class="nc" id="L70">        return &quot;news&quot;;</span>
     }  
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

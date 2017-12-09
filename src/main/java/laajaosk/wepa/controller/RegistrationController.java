@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ *
+ * @author oce
+ */
 @Controller
 @Transactional
 public class RegistrationController {
@@ -28,12 +32,25 @@ public class RegistrationController {
     @Autowired
     private NewsService newsService;
     
+    /**
+     *
+     * @param model
+     * @return
+     */
     @GetMapping("/register")
     public String register(Model model) {
         model = newsService.addFooterAndHeaderData(model);
         return "registering";
     }
     
+    /**
+     *
+     * @param model
+     * @param username
+     * @param password
+     * @param passwordConfirm
+     * @return
+     */
     @PostMapping("/register")
     public String registering(Model model, @RequestParam String username, @RequestParam String password, @RequestParam String passwordConfirm) {
         List<String> messages = new ArrayList<>();

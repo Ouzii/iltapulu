@@ -7,14 +7,22 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+/**
+ *
+ * @author oce
+ */
 @Profile(&quot;production&quot;)
 @Configuration
-<span class="nc" id="L12">public class ProductionConfiguration {</span>
+<span class="nc" id="L16">public class ProductionConfiguration {</span>
     
+    /**
+     *
+     * @return
+     */
     @Bean
     @ConfigurationProperties(prefix = &quot;spring.datasource&quot;)
     public DataSource dataSource() {
-<span class="nc" id="L17">        return DataSourceBuilder.create().build();</span>
+<span class="nc" id="L25">        return DataSourceBuilder.create().build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -20,7 +20,7 @@
             <li th:each="aNewByViews : ${newsByViews}">
                 <a href="#" th:href="@{/news/{id}(id=${aNewByViews.id})}" >
                     <span th:text="${aNewByViews.title}">Otsikko</span>
-                    <img th:src="@{/images/{id}(id=${aNewByViews.id})}" alt="Kuva ei näy!" width="50"/>
+                    <img th:src="@{/images/{id}(id=${aNewByViews.id})}" alt="Kuva ei näy!" width="50"/><br/>
                     <span th:text="${aNewByViews.published}">Julkaistu</span>
                 </a>
             </li>
@@ -32,7 +32,7 @@
             <li th:each="aNewByDate : ${newsByDate}">
                 <a href="#" th:href="@{/news/{id}(id=${aNewByDate.id})}" >
                     <span th:text="${aNewByDate.title}">Otsikko</span>
-                    <img th:src="@{/images/{id}(id=${aNewByDate.id})}" alt="Kuva ei näy!" width="50"/>
+                    <img th:src="@{/images/{id}(id=${aNewByDate.id})}" alt="Kuva ei näy!" width="50"/><br/>
                     <span th:text="${aNewByDate.published}">Julkaistu</span>
                 </a>
             </li>

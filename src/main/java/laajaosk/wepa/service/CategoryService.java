@@ -10,6 +10,10 @@ import laajaosk.wepa.validator.CategoryValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Palvelu kategorioihin liittyvälle logiikalle.
+ * @author oce
+ */
 @Service
 public class CategoryService {
 
@@ -19,11 +23,23 @@ public class CategoryService {
     @Autowired
     private NewsRepository newsRepository;
 
+    /**
+     * Lisää merkkijono listalle ja palauta lista.
+     * @param message
+     * @param messages
+     * @return
+     */
     public List<String> addToMessages(String message, List<String> messages) {
         messages.add(message);
         return messages;
     }
 
+    /**
+     * Kategorian lisääminen. Kutsuu validaattoria tarkastamaan annetut arvot. Jos virheitä löytyy, palautetaan lista virheistä.
+     * Muuten luodaan uusi kategoria ja tallennetaan se tietokantaan.
+     * @param name
+     * @return
+     */
     public List<String> addCategory(String name) {
         List<String> errors = categoryValidator.validateCategory(name, categoryRepository.findAll());
         if (!errors.isEmpty()) {
@@ -36,6 +52,11 @@ public class CategoryService {
         return errors;
     }
 
+    /**
+     * Kategorian poistaminen. Poistetaan riippuvuudet kategorialta ja kategoriaan. Palautetaan poistetun kategorian nimi.
+     * @param id
+     * @return
+     */
     public String deleteCategory(Long id) {
         Category category = categoryRepository.getOne(id);
         String name = "";

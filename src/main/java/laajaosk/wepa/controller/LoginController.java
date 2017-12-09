@@ -12,18 +12,35 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Kontrolleri, joka huolehtii sisäänkirjautumisesta.
+ * @author oce
+ */
 @Controller
 public class LoginController {
 
     @Autowired
     private LoginService loginService;
 
+    /**
+     * Näyttää kirjautumissivun.
+     * @param model
+     * @return
+     */
     @GetMapping("/login")
     public String loginPage(Model model) {
         model = loginService.addFooterAndHeaderData(model);
         return "login";
     }
 
+    /**
+     * Hoitaa sisäänkirjautumisen.
+     * @param redirectAttribute
+     * @param username
+     * @param password
+     * @param session
+     * @return
+     */
     @PostMapping("/login")
     public String logIn(RedirectAttributes redirectAttribute, @RequestParam String username, @RequestParam String password, HttpSession session) {
         List<String> messages = new ArrayList<>();
@@ -38,6 +55,12 @@ public class LoginController {
         }
     }
 
+    /**
+     * Hoitaa uloskirjautumisen.
+     * @param redirectAttribute
+     * @param session
+     * @return
+     */
     @PostMapping("/logout")
     public String logOut(RedirectAttributes redirectAttribute, HttpSession session) {
         loginService.logout(session, redirectAttribute);

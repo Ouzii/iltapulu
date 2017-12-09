@@ -27,7 +27,7 @@
                 <li th:each="message:${messages}" th:text="${message}"/>
             </ul>
         </div>
-        <form action="/login" method="POST">
+        <form action="/login" method="POST" id="loginForm">
             <input type="text" name="username" id="username" placeholder="Käyttäjätunnus"/><br/>
             <input type="password" name="password" id="password" placeholder="Salasana"/><br/>
             <input type="submit" value="Kirjaudu"/>

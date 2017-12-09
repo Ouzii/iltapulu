@@ -10,11 +10,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+/**
+ * Tietokanta entiteetti kuvalle.
+ * @author oce
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
-public class FileObject extends AbstractPersistable<Long> {
+public class Image extends AbstractPersistable<Long> {
  
     private String name;
     private String contentType;

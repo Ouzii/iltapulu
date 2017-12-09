@@ -12,6 +12,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+/**
+ * Tietokanta entiteetti uutiselle.
+ * @author oce
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

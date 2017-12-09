@@ -4,9 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import laajaosk.wepa.domain.Category;
 
+/**
+ * Kategorian validaattori.
+ * @author oce
+ */
 public class CategoryValidator {
     
-    
+    /**
+     * Validoidaan kategorian nimen oikeellisuus ja kategorioiden maksimimäärä. Katsotaan myös, ettei kyseistä
+     * kategoriaa ole jo olemassa.
+     * @param name
+     * @param categories
+     * @return
+     */
     public List<String> validateCategory(String name, List<Category> categories) {
         List<String> errors = new ArrayList<>();
 

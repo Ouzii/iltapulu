@@ -4,8 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Uutisen validaattori.
+ * @author oce
+ */
 public class NewsValidator {
 
+    /**
+     * Ajetaan kaikki eri validaatiometodit yhdestä metodista.
+     * @param title
+     * @param ingress
+     * @param text
+     * @param categories
+     * @param writers
+     * @param img
+     * @return
+     */
     public List<String> runValidations(String title, String ingress, String text, List<Long> categories, List<Long> writers, MultipartFile img) {
         List<String> errors = new ArrayList<>();
         errors = validateTitle(title, errors);
@@ -19,6 +33,15 @@ public class NewsValidator {
 
     }
     
+    /**
+     * Ajetaan kaikki paitsi kuvan validoiva metodi yhdestä metodista.
+     * @param title
+     * @param ingress
+     * @param text
+     * @param categories
+     * @param writers
+     * @return
+     */
     public List<String> runValidationsNoImg(String title, String ingress, String text, List<Long> categories, List<Long> writers) {
         List<String> errors = new ArrayList<>();
         errors = validateTitle(title, errors);
@@ -31,6 +54,12 @@ public class NewsValidator {
 
     }
 
+    /**
+     * Validoidaan otsikon pituus.
+     * @param title
+     * @param errors
+     * @return
+     */
     public List<String> validateTitle(String title, List<String> errors) {
         if (title.length() > 60 || title.isEmpty()) {
             errors.add("Otsikon täytyy olla 1-60 merkkiä pitkä!");
@@ -38,6 +67,12 @@ public class NewsValidator {
         return errors;
     }
 
+    /**
+     * Validoidaan ingressin pituus.
+     * @param ingress
+     * @param errors
+     * @return
+     */
     public List<String> validateIngress(String ingress, List<String> errors) {
 
         if (ingress.length() > 120 || ingress.isEmpty()) {
@@ -46,6 +81,12 @@ public class NewsValidator {
         return errors;
     }
 
+    /**
+     * Validoidaan leipätekstin pituus.
+     * @param text
+     * @param errors
+     * @return
+     */
     public List<String> validateText(String text, List<String> errors) {
 
         if (text.isEmpty()) {
@@ -59,6 +100,12 @@ public class NewsValidator {
         return errors;
     }
 
+    /**
+     * Validoidaan kuvan koko ja muoto.
+     * @param img
+     * @param errors
+     * @return
+     */
     public List<String> validateImage(MultipartFile img, List<String> errors) {
         
         if (img == null) {
@@ -81,6 +128,12 @@ public class NewsValidator {
         return errors;
     }
 
+    /**
+     * Validoidaan uutisen kategoria-yhteydet.
+     * @param categories
+     * @param errors
+     * @return
+     */
     public List<String> validateCategories(List<Long> categories, List<String> errors) {
 
         try {
@@ -94,6 +147,12 @@ public class NewsValidator {
         return errors;
     }
 
+    /**
+     * Validoidaan uutisen kirjoittaja-yhteydet.
+     * @param writers
+     * @param errors
+     * @return
+     */
     public List<String> validateWriters(List<Long> writers, List<String> errors) {
 
         try {

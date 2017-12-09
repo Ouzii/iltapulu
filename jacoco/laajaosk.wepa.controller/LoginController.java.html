@@ -12,36 +12,59 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Kontrolleri, joka huolehtii sisäänkirjautumisesta.
+ * @author oce
+ */
 @Controller
-<span class="fc" id="L16">public class LoginController {</span>
+<span class="fc" id="L20">public class LoginController {</span>
 
     @Autowired
     private LoginService loginService;
 
+    /**
+     * Näyttää kirjautumissivun.
+     * @param model
+     * @return
+     */
     @GetMapping(&quot;/login&quot;)
     public String loginPage(Model model) {
-<span class="fc" id="L23">        model = loginService.addFooterAndHeaderData(model);</span>
-<span class="fc" id="L24">        return &quot;login&quot;;</span>
+<span class="fc" id="L32">        model = loginService.addFooterAndHeaderData(model);</span>
+<span class="fc" id="L33">        return &quot;login&quot;;</span>
     }
 
+    /**
+     * Hoitaa sisäänkirjautumisen.
+     * @param redirectAttribute
+     * @param username
+     * @param password
+     * @param session
+     * @return
+     */
     @PostMapping(&quot;/login&quot;)
     public String logIn(RedirectAttributes redirectAttribute, @RequestParam String username, @RequestParam String password, HttpSession session) {
-<span class="nc" id="L29">        List&lt;String&gt; messages = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L30" title="All 2 branches missed.">        if (loginService.login(session, username, password, redirectAttribute)) {</span>
-<span class="nc" id="L31">            messages.add(&quot;Kirjauduttu! Tervetuloa &quot; + username);</span>
-<span class="nc" id="L32">            redirectAttribute.addFlashAttribute(&quot;messages&quot;, messages);</span>
-<span class="nc" id="L33">            return &quot;redirect:/&quot;;</span>
+<span class="fc" id="L46">        List&lt;String&gt; messages = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (loginService.login(session, username, password, redirectAttribute)) {</span>
+<span class="nc" id="L48">            messages.add(&quot;Kirjauduttu! Tervetuloa &quot; + username);</span>
+<span class="nc" id="L49">            redirectAttribute.addFlashAttribute(&quot;messages&quot;, messages);</span>
+<span class="nc" id="L50">            return &quot;redirect:/&quot;;</span>
         } else {
-<span class="nc" id="L35">            messages.add(&quot;Väärä käyttäjätunnus tai salasana!&quot;);</span>
-<span class="nc" id="L36">            redirectAttribute.addFlashAttribute(&quot;messages&quot;, messages);</span>
-<span class="nc" id="L37">            return &quot;redirect:/login&quot;;</span>
+<span class="fc" id="L52">            messages.add(&quot;Väärä käyttäjätunnus tai salasana!&quot;);</span>
+<span class="fc" id="L53">            redirectAttribute.addFlashAttribute(&quot;messages&quot;, messages);</span>
+<span class="fc" id="L54">            return &quot;redirect:/login&quot;;</span>
         }
     }
 
+    /**
+     * Hoitaa uloskirjautumisen.
+     * @param redirectAttribute
+     * @param session
+     * @return
+     */
     @PostMapping(&quot;/logout&quot;)
     public String logOut(RedirectAttributes redirectAttribute, HttpSession session) {
-<span class="nc" id="L43">        loginService.logout(session, redirectAttribute);</span>
-<span class="nc" id="L44">        return &quot;redirect:/&quot;;</span>
+<span class="nc" id="L66">        loginService.logout(session, redirectAttribute);</span>
+<span class="nc" id="L67">        return &quot;redirect:/&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
