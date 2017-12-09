@@ -116,6 +116,13 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.7.9</version>
+                <configuration>
+                    <excludes>
+                        <exclude>laajaosk/wepa/controller/**/*</exclude>
+                        <exclude>laajaosk/wepa/domain/**/*</exclude>
+                        <exclude>laajaosk/wepa/repository/**/*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
