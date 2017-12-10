@@ -30,7 +30,7 @@
         <title>Iltapulu</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
-<!--        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
+        <!--        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
 
     </head>
     <body>
@@ -71,12 +71,14 @@
         </ul>
         <label>Luettu: </label><span th:text="${#lists.size(aNew.views)}"/>
 
-        <form th:method="DELETE" th:action="@{/news/{id}(id=${aNew.id})}">
-            <input type="submit" value="Poista"/>
-        </form>
-        <form th:method="GET" th:action="@{/news/{id}/modify(id=${aNew.id})}">
-            <input type="submit" value="Muokkaa"/>
-        </form>
+        <div th:if="${session.user}">
+            <form th:method="DELETE" th:action="@{/news/{id}(id=${aNew.id})}">
+                <input type="submit" value="Poista"/>
+            </form>
+            <form th:method="GET" th:action="@{/news/{id}/modify(id=${aNew.id})}">
+                <input type="submit" value="Muokkaa"/>
+            </form>
+        </div>
 
 
         <div th:replace="fragments/footer :: footer">

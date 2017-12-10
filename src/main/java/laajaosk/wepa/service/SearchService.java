@@ -15,9 +15,9 @@ public class SearchService {
     
     
     public List<News> searchForNews(String searchWord) {
-        List<News> news = newsRepository.findByTitleContaining(searchWord);
-        news.addAll(newsRepository.findByIngressContaining(searchWord));
-        news.addAll(newsRepository.findByTextContaining(searchWord));
+        List<News> news = newsRepository.findByTitleContainingIgnoreCase(searchWord);
+        news.addAll(newsRepository.findByIngressContainingIgnoreCase(searchWord));
+        news.addAll(newsRepository.findByTextContainingIgnoreCase(searchWord));
         return news;
     }
 }

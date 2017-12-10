@@ -3,6 +3,7 @@ package laajaosk.wepa.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import laajaosk.wepa.validator.NewsValidator;
 import laajaosk.wepa.domain.*;
 import laajaosk.wepa.repository.*;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import static org.thymeleaf.spring5.util.FieldUtils.errors;
 
 /**
  * Palvelu kirjautumista vaativien toimintojen logiikalle.
@@ -62,8 +64,12 @@ public class ModeratorService {
      * @return
      * @throws IOException
      */
-    public List<String> ModifyNews(Long id, String title, String ingress, String text, List<Long> writers, List<Long> categories, MultipartFile img) throws IOException {
+    public List<String> ModifyNews(HttpSession session, Long id, String title, String ingress, String text, List<Long> writers, List<Long> categories, MultipartFile img) throws IOException {
         List<String> errors = new ArrayList<>();
+        if (session.getAttribute("user") == null) {
+            errors.add("Et ole kirjautuneena!");
+            return errors;
+        }
         if (!img.isEmpty()) {
             errors = newsValidator.runValidations(title, ingress, text, categories, writers, img);
         } else {
@@ -155,8 +161,12 @@ public class ModeratorService {
      * @return
      * @throws IOException
      */
-    public List<String> addNews(String title, String ingress, String text, List<Long> writers, List<Long> categories, MultipartFile img) throws IOException {
+    public List<String> addNews(HttpSession session, String title, String ingress, String text, List<Long> writers, List<Long> categories, MultipartFile img) throws IOException {
         List<String> errors = newsValidator.runValidations(title, ingress, text, categories, writers, img);
+        if (session.getAttribute("user") == null) {
+            errors.add("Et ole kirjautuneena!");
+            return errors;
+        }
         if (!errors.isEmpty()) {
             return errors;
         }
@@ -174,7 +184,10 @@ public class ModeratorService {
      * @param id
      * @return
      */
-    public String deleteNews(Long id) {
+    public String deleteNews(HttpSession session, Long id) {
+        if (session.getAttribute("user") == null) {
+            return "Et ole kirjautuneena!";
+        }
         News aNew = newsRepository.getOne(id);
         String title = aNew.getTitle();
         deleteCategoryRelationsFromNews(aNew);

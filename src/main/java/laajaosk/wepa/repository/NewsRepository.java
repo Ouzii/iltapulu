@@ -40,8 +40,8 @@ public interface NewsRepository extends JpaRepository<News, Long> {
      */
     News findByTitle(String title);
     
-    List<News> findByTitleContaining(String searchWord);
-    List<News> findByIngressContaining(String searchWord);
-    List<News> findByTextContaining(String searchWord);
+    List<News> findByTitleContainingIgnoreCase(String searchWord);
+    List<News> findByIngressContainingIgnoreCase(String searchWord);
+    List<News> findByTextContainingIgnoreCase(String searchWord);
 
 }

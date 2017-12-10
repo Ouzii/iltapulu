@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
     
     
     public List&lt;News&gt; searchForNews(String searchWord) {
-<span class="nc" id="L18">        List&lt;News&gt; news = newsRepository.findByTitleContaining(searchWord);</span>
-<span class="nc" id="L19">        news.addAll(newsRepository.findByIngressContaining(searchWord));</span>
-<span class="nc" id="L20">        news.addAll(newsRepository.findByTextContaining(searchWord));</span>
-<span class="nc" id="L21">        return news;</span>
+<span class="fc" id="L18">        List&lt;News&gt; news = newsRepository.findByTitleContainingIgnoreCase(searchWord);</span>
+<span class="fc" id="L19">        news.addAll(newsRepository.findByIngressContainingIgnoreCase(searchWord));</span>
+<span class="fc" id="L20">        news.addAll(newsRepository.findByTextContainingIgnoreCase(searchWord));</span>
+<span class="fc" id="L21">        return news;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

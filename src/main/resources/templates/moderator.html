@@ -22,6 +22,7 @@
             </ul>
         </div>
 
+        <div th:if="${session.user}">
         <form method="POST" action="/moderator/news" enctype="multipart/form-data" id="addNews">
             <label>Otsikko</label><br/>
             <input style="text" name="title" placeholder="Title"/><br/>
@@ -54,16 +55,11 @@
 
         <label>Kirjoittajat:</label>
         <ul>
-            <li th:each="w:${writers}">
-                <span  th:text="${w.name}"/>
+            <li th:each="writer:${writers}">
+                <span  th:text="${writer.name}"/>
                 <br/>
             </li>
         </ul>
-
-        <form method="POST" action="/moderator/writer">
-            <input type="text" name="name" placeholder="Anna nimi"/>
-            <input type="submit" value="Luo"/>
-        </form>
 
         <br/>
         <br/>
@@ -82,7 +78,10 @@
             <input type="text" name="name" placeholder="Anna nimi"/>
             <input type="submit" value="Luo"/>
         </form>
-        
+        </div>
+        <div th:unless="${session.user}">
+            <h1>Kirjadu sisään käyttääksesi ylläpidon toimintoja!</h1>
+        </div>
         
         
     </body>

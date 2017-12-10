@@ -54,6 +54,7 @@ public class LoginController {
             return "redirect:/login";
         }
     }
+    
 
     /**
      * Hoitaa uloskirjautumisen.

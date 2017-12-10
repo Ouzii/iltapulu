@@ -6,6 +6,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 import laajaosk.wepa.ModelMock;
 import laajaosk.wepa.MultipartFileMock;
+import laajaosk.wepa.SessionMock;
 import laajaosk.wepa.domain.Category;
 import laajaosk.wepa.domain.News;
 import laajaosk.wepa.domain.Writer;
@@ -40,9 +41,12 @@ public class NewsServiceTest {
 
     private MultipartFileMock img;
     private ModelMock model;
+    private SessionMock session;
 
     @Before
     public void setUp() {
+        this.session = new SessionMock();
+        this.session.setAttribute("user", new Writer());
         this.model = new ModelMock();
         this.model.addAttribute("Test", new ArrayList<>());
         this.img = new MultipartFileMock("Kuva", "Kuva.jpg", "image/jpg", new Long(120), new byte[0]);
@@ -83,7 +87,7 @@ public class NewsServiceTest {
         for (Writer writer : writers) {
             writerIds.add(writer.getId());
         }
-        moderatorService.addNews("Otsikko2", "Ingressi", "Leipäteksti", writerIds, categoryIds, this.img);
+        moderatorService.addNews(session, "Otsikko2", "Ingressi", "Leipäteksti", writerIds, categoryIds, this.img);
         News aNew = newsRepository.findByTitle("Otsikko2");
         assertEquals(0, aNew.getViews().size());
         newsService.addViewForaNew(aNew.getId());

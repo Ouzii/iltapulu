@@ -26,7 +26,7 @@
 
     <dependencies>
 
-        
+
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
@@ -102,7 +102,6 @@
             <version>1.4.01</version>
             <scope>test</scope>
         </dependency>
-    
     </dependencies>
 
     <build>
@@ -121,6 +120,8 @@
                         <exclude>laajaosk/wepa/controller/**/*</exclude>
                         <exclude>laajaosk/wepa/domain/**/*</exclude>
                         <exclude>laajaosk/wepa/repository/**/*</exclude>
+                        <exclude>**/*ProductionConfiguration.java</exclude>
+                        <exclude>**/*WepaHarjoitusApplication.java</exclude>
                     </excludes>
                 </configuration>
                 <executions>

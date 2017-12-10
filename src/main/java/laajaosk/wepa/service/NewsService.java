@@ -150,27 +150,4 @@ public class NewsService {
         newsRepository.save(aNew);
         return aNew;
     }
-
-//    public void initiateTestData() {
-//        Category viihde = new Category();
-//        viihde.setName("Viihde");
-//        Category urheilu = new Category();
-//        urheilu.setName("Urheilu");
-//        Category uutiset = new Category();
-//        uutiset.setName("Uutiset");
-//        if (categoryRepository.findByName(viihde.getName()) == null && categoryRepository.findByName(urheilu.getName()) == null) {
-//            categoryRepository.save(viihde);
-//            categoryRepository.save(urheilu);
-//            categoryRepository.save(uutiset);
-//        }
-//
-//        Writer pekka = new Writer();
-//        pekka.setName("Pekka");
-//        Writer jarkko = new Writer();
-//        jarkko.setName("Jarkko");
-//        if (writerRepository.findByName(pekka.getName()) == null && writerRepository.findByName(jarkko.getName()) == null) {
-//            writerRepository.save(pekka);
-//            writerRepository.save(jarkko);
-//        }
-//    }
 }

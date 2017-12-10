@@ -19,9 +19,6 @@
                         <li>
                             <a href="#" th:href="@{/}">Etusivu</a>
                         </li>
-                        <!--            <li>
-                                      <a href="#" th:href="@{/news/list/1}">Uutiset</a>
-                                    </li>-->
                         <li th:each="category:${categories}">
                             <a href="#" th:href="@{/news/{name}/list/1/published(name=${category.name})}" th:id="${category.name}" th:text="${category.name}">Kategoria</a>
                         </li>

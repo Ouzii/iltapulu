@@ -3,6 +3,7 @@ package laajaosk.wepa.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import laajaosk.wepa.domain.Writer;
 import laajaosk.wepa.repository.WriterRepository;
 import laajaosk.wepa.service.ModeratorService;
@@ -43,22 +44,6 @@ public class ModeratorController {
     }
 
     /**
-     * 
-     * @param name
-     * @return
-     */
-    @PostMapping("/moderator/writer")
-    public String addWriter(@RequestParam String name) {
-        if (writerRepository.findByName(name) == null) {
-            Writer w = new Writer();
-            w.setName(name);
-            writerRepository.save(w);
-        }
-
-        return "redirect:/moderator";
-    }
-
-    /**
      * Luo uutisen moderatorServicen avulla.
      * @param redirectAttribute
      * @param model
@@ -72,8 +57,8 @@ public class ModeratorController {
      * @throws IOException
      */
     @PostMapping("/moderator/news")
-    public String add(RedirectAttributes redirectAttribute, Model model, @RequestParam String title, @RequestParam String ingress, @RequestParam String text, @RequestParam("img") MultipartFile img, @RequestParam(value = "writers", required = false) List<Long> writers, @RequestParam(value = "categories", required = false) List<Long> categories) throws IOException {
-        List<String> errors = moderatorService.addNews(title, ingress, text, writers, categories, img);
+    public String add(HttpSession session, RedirectAttributes redirectAttribute, Model model, @RequestParam String title, @RequestParam String ingress, @RequestParam String text, @RequestParam("img") MultipartFile img, @RequestParam(value = "writers", required = false) List<Long> writers, @RequestParam(value = "categories", required = false) List<Long> categories) throws IOException {
+        List<String> errors = moderatorService.addNews(session, title, ingress, text, writers, categories, img);
         if (!errors.isEmpty()) {
             redirectAttribute.addFlashAttribute("messages", errors);
             moderatorService.addCategoriesAndWriters(redirectAttribute);
@@ -92,9 +77,15 @@ public class ModeratorController {
      * @return
      */
     @DeleteMapping("/news/{id}")
-    public String delete(RedirectAttributes redirectAttribute, @PathVariable Long id) {
-        String title = moderatorService.deleteNews(id);
-        List<String> messages = moderatorService.addToMessages("\"" + title + "\" on poistettu onnistuneesti!", new ArrayList<>());
+    public String delete(HttpSession session, RedirectAttributes redirectAttribute, @PathVariable Long id) {
+        String title = moderatorService.deleteNews(session, id);
+        List<String> messages = new ArrayList<>();
+        if (title.equals("Et ole kirjautuneena!")) {
+            messages = moderatorService.addToMessages(title, new ArrayList<>());
+            redirectAttribute.addFlashAttribute("messages", messages);
+            return "redirect:/";
+        }
+        messages = moderatorService.addToMessages("\"" + title + "\" on poistettu onnistuneesti!", new ArrayList<>());
         redirectAttribute.addFlashAttribute("messages", messages);
         return "redirect:/";
     }
@@ -126,16 +117,14 @@ public class ModeratorController {
      * @throws IOException
      */
     @PostMapping("/moderator/news/{id}")
-    public String postModify(RedirectAttributes redirectAttribute, @PathVariable Long id, @RequestParam String title, @RequestParam String ingress, @RequestParam String text, @RequestParam("img") MultipartFile img, @RequestParam(value = "writers", required = false) List<Long> writers, @RequestParam(value = "categories", required = false) List<Long> categories) throws IOException {
-        List<String> errors = moderatorService.ModifyNews(id, title, ingress, text, writers, categories, img);
+    public String postModify(HttpSession session, RedirectAttributes redirectAttribute, @PathVariable Long id, @RequestParam String title, @RequestParam String ingress, @RequestParam String text, @RequestParam("img") MultipartFile img, @RequestParam(value = "writers", required = false) List<Long> writers, @RequestParam(value = "categories", required = false) List<Long> categories) throws IOException {
+        List<String> errors = moderatorService.ModifyNews(session, id, title, ingress, text, writers, categories, img);
 
         if (!errors.isEmpty()) {
             redirectAttribute.addFlashAttribute("messages", errors);
             moderatorService.addCategoriesAndWriters(redirectAttribute);
             return "redirect:/news/" + id;
         }
-
-        moderatorService.ModifyNews(id, title, ingress, text, writers, categories, img);
 
         List<String> messages = moderatorService.addToMessages("Muokkaus onnistui!", new ArrayList<>());
         redirectAttribute.addFlashAttribute("messages", messages);
