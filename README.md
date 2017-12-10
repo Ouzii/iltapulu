@@ -11,3 +11,14 @@ hy-wepa-s2017 harjoitustyö
 ## JavaDocs
 
 [JavaDoc](http://htmlpreview.github.io/?https://github.com/Ouzii/iltapulu/blob/master/apidocs/index.html)
+
+## Testikäyttäjät:
+
+Tunnus : Chuck Norris
+Salasana: liianVahva
+
+Tunnus: Pekka Pouta
+Salasana: pilviPeite
+
+Tunnus: Kaija Koo
+Salasana: Sydämeni
