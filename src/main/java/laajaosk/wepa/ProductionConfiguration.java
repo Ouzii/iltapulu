@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 /**
- *
+ * Profiilikonfiguraatio tuotannolle.
  * @author oce
  */
 @Profile("production")

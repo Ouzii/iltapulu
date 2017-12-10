@@ -54,6 +54,7 @@ public class ModeratorService {
      * metodeja, jotka hoitavat muutosten tekemisen ja tietokantaan
      * tallentamisen.
      *
+     * @param session
      * @param id
      * @param title
      * @param ingress
@@ -152,6 +153,7 @@ public class ModeratorService {
     /**
      * Uutisen lisääminen. Kutsuu validaattoria tarkistamaan syötteet. Jos virheitä löytyy, palautetaan virheet takaisin
      * kontrolleriin. Muuten kutsutaan muita yksityisiä metodeja luomaan ja tallentamaan uutinen tietokantaan.
+     * @param session
      * @param title
      * @param ingress
      * @param text
@@ -181,6 +183,7 @@ public class ModeratorService {
     /**
      * Uutisen poistaminen. Kutsutaan muita metodeja poistamaan riippuvuudet uutiselta/uutiseen. Lopuksi poistetaan
      * uutinen tietokannasta.
+     * @param session
      * @param id
      * @return
      */

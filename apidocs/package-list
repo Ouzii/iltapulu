@@ -1,0 +1,6 @@
+laajaosk.wepa
+laajaosk.wepa.controller
+laajaosk.wepa.domain
+laajaosk.wepa.repository
+laajaosk.wepa.service
+laajaosk.wepa.validator

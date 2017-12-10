@@ -45,6 +45,7 @@ public class ModeratorController {
 
     /**
      * Luo uutisen moderatorServicen avulla.
+     * @param session
      * @param redirectAttribute
      * @param model
      * @param title
@@ -72,6 +73,7 @@ public class ModeratorController {
 
     /**
      * Poistaa uutisen.
+     * @param session
      * @param redirectAttribute
      * @param id
      * @return
@@ -105,6 +107,7 @@ public class ModeratorController {
 
     /**
      * Muokkaa uutista moderatorServicen avulla.
+     * @param session
      * @param redirectAttribute
      * @param id
      * @param title

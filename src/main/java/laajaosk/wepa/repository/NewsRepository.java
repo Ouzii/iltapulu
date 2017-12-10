@@ -40,8 +40,25 @@ public interface NewsRepository extends JpaRepository<News, Long> {
      */
     News findByTitle(String title);
     
+    /**
+     * Hakee uutiset, joiden otsikossa esiintyy hakusana.
+     * @param searchWord
+     * @return
+     */
     List<News> findByTitleContainingIgnoreCase(String searchWord);
+
+    /**
+     * Hakee uutiset, joiden ingressissä esiintyy hakusana.
+     * @param searchWord
+     * @return
+     */
     List<News> findByIngressContainingIgnoreCase(String searchWord);
+
+    /**
+     * Hakee uutiset, joiden leipätekstissä esiintyy hakusana.
+     * @param searchWord
+     * @return
+     */
     List<News> findByTextContainingIgnoreCase(String searchWord);
 
 }
