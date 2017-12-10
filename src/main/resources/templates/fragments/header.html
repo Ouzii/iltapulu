@@ -34,16 +34,13 @@
                             <a href="#" th:href="@{/moderator}">Ylläpito</a>
                         </li>
                         <li th:unless="${session.user}">
-                            <a href="#" th:href="@{/register}">Rekisteröidy</a>
-                        </li>
-                        <li th:unless="${session.user}">
                             <form method="GET" action="/login" style="margin-top: 12px;">
-                                <button style="height: 30px;width: 120px; background-color: darkgreen; color: buttontext"  type="submit">Kirjaudu sisään</button>
+                                <button style="height: 30px;width: 120px; background-color: darkgreen; color: white"  type="submit">Kirjaudu sisään</button>
                             </form>
                         </li>
                         <li th:if="${session.user}">
                             <form method="POST" action="/logout" style="margin-top: 12px;">
-                                <button style="height: 30px;width: 120px; background-color: darkred"  type="submit">Kirjaudu ulos</button>
+                                <button style="height: 30px;width: 120px; background-color: darkred; color: white"  type="submit">Kirjaudu ulos</button>
                             </form>
                         </li>
                     </ul>

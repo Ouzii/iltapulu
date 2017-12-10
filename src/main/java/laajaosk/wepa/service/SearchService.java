@@ -24,8 +24,18 @@ public class SearchService {
      */
     public List<News> searchForNews(String searchWord) {
         List<News> news = newsRepository.findByTitleContainingIgnoreCase(searchWord);
-        news.addAll(newsRepository.findByIngressContainingIgnoreCase(searchWord));
-        news.addAll(newsRepository.findByTextContainingIgnoreCase(searchWord));
+        List<News> news2 = newsRepository.findByIngressContainingIgnoreCase(searchWord);
+        List<News> news3 = newsRepository.findByTextContainingIgnoreCase(searchWord);
+        for (News aNew : news2) {
+            if (!news.contains(aNew)) {
+                news.add(aNew);
+            }
+        }
+        for (News aNew : news3) {
+            if (!news.contains(aNew)) {
+                news.add(aNew);
+            }
+        }
         return news;
     }
 }

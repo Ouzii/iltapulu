@@ -54,6 +54,7 @@ import static org.thymeleaf.spring5.util.FieldUtils.errors;
      * metodeja, jotka hoitavat muutosten tekemisen ja tietokantaan
      * tallentamisen.
      *
+     * @param session
      * @param id
      * @param title
      * @param ingress
@@ -65,93 +66,94 @@ import static org.thymeleaf.spring5.util.FieldUtils.errors;
      * @throws IOException
      */
     public List&lt;String&gt; ModifyNews(HttpSession session, Long id, String title, String ingress, String text, List&lt;Long&gt; writers, List&lt;Long&gt; categories, MultipartFile img) throws IOException {
-<span class="fc" id="L68">        List&lt;String&gt; errors = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (session.getAttribute(&quot;user&quot;) == null) {</span>
-<span class="fc" id="L70">            errors.add(&quot;Et ole kirjautuneena!&quot;);</span>
-<span class="fc" id="L71">            return errors;</span>
+<span class="fc" id="L69">        List&lt;String&gt; errors = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (session.getAttribute(&quot;user&quot;) == null) {</span>
+<span class="fc" id="L71">            errors.add(&quot;Et ole kirjautuneena!&quot;);</span>
+<span class="fc" id="L72">            return errors;</span>
         }
-<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if (!img.isEmpty()) {</span>
-<span class="fc" id="L74">            errors = newsValidator.runValidations(title, ingress, text, categories, writers, img);</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (!img.isEmpty()) {</span>
+<span class="fc" id="L75">            errors = newsValidator.runValidations(title, ingress, text, categories, writers, img);</span>
         } else {
-<span class="nc" id="L76">            errors = newsValidator.runValidationsNoImg(title, ingress, text, categories, writers);</span>
+<span class="nc" id="L77">            errors = newsValidator.runValidationsNoImg(title, ingress, text, categories, writers);</span>
         }
-<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if (!errors.isEmpty()) {</span>
-<span class="nc" id="L79">            return errors;</span>
-        }
-
-<span class="fc" id="L82">        News aNew = doModificationsToNews(id, title, ingress, text, writers, categories);</span>
-
-<span class="pc bpc" id="L84" title="2 of 4 branches missed.">        if (img != null &amp;&amp; !img.isEmpty()) {</span>
-<span class="fc" id="L85">            doModificationsToImg(aNew, img);</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        if (!errors.isEmpty()) {</span>
+<span class="nc" id="L80">            return errors;</span>
         }
 
-<span class="fc" id="L88">        return errors;</span>
+<span class="fc" id="L83">        News aNew = doModificationsToNews(id, title, ingress, text, writers, categories);</span>
+
+<span class="pc bpc" id="L85" title="2 of 4 branches missed.">        if (img != null &amp;&amp; !img.isEmpty()) {</span>
+<span class="fc" id="L86">            doModificationsToImg(aNew, img);</span>
+        }
+
+<span class="fc" id="L89">        return errors;</span>
     }
 
     /**
      * Korvaa vanhan kuvan uudella kuvalla.
      */
     private void doModificationsToImg(News aNew, MultipartFile img) throws IOException {
-<span class="fc" id="L95">        Image old = imageRepository.findByNews(aNew);</span>
-<span class="fc" id="L96">        createEntityOutOfImg(aNew, img);</span>
-<span class="fc" id="L97">        imageRepository.delete(old);</span>
-<span class="fc" id="L98">    }</span>
+<span class="fc" id="L96">        Image old = imageRepository.findByNews(aNew);</span>
+<span class="fc" id="L97">        createEntityOutOfImg(aNew, img);</span>
+<span class="fc" id="L98">        imageRepository.delete(old);</span>
+<span class="fc" id="L99">    }</span>
 
     /**
      * Luo annetusta MultipartFile -oliosta Image-olion.
      */
     private void createEntityOutOfImg(News aNew, MultipartFile img) throws IOException {
-<span class="fc" id="L104">        Image fo = new Image();</span>
+<span class="fc" id="L105">        Image fo = new Image();</span>
 
-<span class="fc" id="L106">        fo.setName(img.getOriginalFilename());</span>
-<span class="fc" id="L107">        fo.setContent(img.getBytes());</span>
-<span class="fc" id="L108">        fo.setContentLength(img.getSize());</span>
-<span class="fc" id="L109">        fo.setContentType(img.getContentType());</span>
+<span class="fc" id="L107">        fo.setName(img.getOriginalFilename());</span>
+<span class="fc" id="L108">        fo.setContent(img.getBytes());</span>
+<span class="fc" id="L109">        fo.setContentLength(img.getSize());</span>
+<span class="fc" id="L110">        fo.setContentType(img.getContentType());</span>
 
-<span class="fc" id="L111">        fo.setNews(aNew);</span>
-<span class="fc" id="L112">        imageRepository.save(fo);</span>
-<span class="fc" id="L113">    }</span>
+<span class="fc" id="L112">        fo.setNews(aNew);</span>
+<span class="fc" id="L113">        imageRepository.save(fo);</span>
+<span class="fc" id="L114">    }</span>
 
     /**
      * Hakee halutun uutisen ja kutsuu muita metodeja suorittamaan muutokset.
      */
     private News doModificationsToNews(Long id, String title, String ingress, String text, List&lt;Long&gt; writers, List&lt;Long&gt; categories) {
-<span class="fc" id="L119">        News aNew = newsRepository.getOne(id);</span>
-<span class="fc" id="L120">        setNewsAttributes(aNew, title, ingress, text);</span>
-<span class="fc" id="L121">        addToWritersAndCategories(aNew, writers, categories);</span>
-<span class="fc" id="L122">        newsRepository.save(aNew);</span>
-<span class="fc" id="L123">        return aNew;</span>
+<span class="fc" id="L120">        News aNew = newsRepository.getOne(id);</span>
+<span class="fc" id="L121">        setNewsAttributes(aNew, title, ingress, text);</span>
+<span class="fc" id="L122">        addToWritersAndCategories(aNew, writers, categories);</span>
+<span class="fc" id="L123">        newsRepository.save(aNew);</span>
+<span class="fc" id="L124">        return aNew;</span>
     }
 
     /**
      * Asettaa uutiselle attribuutit.
      */
     private News setNewsAttributes(News aNew, String title, String ingress, String text) {
-<span class="fc" id="L130">        aNew.setTitle(title);</span>
-<span class="fc" id="L131">        aNew.setIngress(ingress);</span>
-<span class="fc" id="L132">        aNew.setText(text);</span>
-<span class="fc" id="L133">        aNew.setWriters(new ArrayList&lt;&gt;());</span>
-<span class="fc" id="L134">        aNew.setCategories(new ArrayList&lt;&gt;());</span>
-<span class="fc" id="L135">        return aNew;</span>
+<span class="fc" id="L131">        aNew.setTitle(title);</span>
+<span class="fc" id="L132">        aNew.setIngress(ingress);</span>
+<span class="fc" id="L133">        aNew.setText(text);</span>
+<span class="fc" id="L134">        aNew.setWriters(new ArrayList&lt;&gt;());</span>
+<span class="fc" id="L135">        aNew.setCategories(new ArrayList&lt;&gt;());</span>
+<span class="fc" id="L136">        return aNew;</span>
     }
 
     /**
      * Lisää uutiselle kirjoittajat ja kategoriat ja toisinpäin.
      */
     private void addToWritersAndCategories(News aNew, List&lt;Long&gt; writers, List&lt;Long&gt; categories) {
-<span class="fc bfc" id="L142" title="All 2 branches covered.">        for (Long writer : writers) {</span>
-<span class="fc" id="L143">            aNew.getWriters().add(writerRepository.getOne(writer));</span>
-<span class="fc" id="L144">            writerRepository.getOne(writer).getNews().add(aNew);</span>
-<span class="fc" id="L145">        }</span>
-<span class="fc bfc" id="L146" title="All 2 branches covered.">        for (Long category : categories) {</span>
-<span class="fc" id="L147">            aNew.getCategories().add(categoryRepository.getOne(category));</span>
-<span class="fc" id="L148">            categoryRepository.getOne(category).getNews().add(aNew);</span>
-<span class="fc" id="L149">        }</span>
-<span class="fc" id="L150">    }</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        for (Long writer : writers) {</span>
+<span class="fc" id="L144">            aNew.getWriters().add(writerRepository.getOne(writer));</span>
+<span class="fc" id="L145">            writerRepository.getOne(writer).getNews().add(aNew);</span>
+<span class="fc" id="L146">        }</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        for (Long category : categories) {</span>
+<span class="fc" id="L148">            aNew.getCategories().add(categoryRepository.getOne(category));</span>
+<span class="fc" id="L149">            categoryRepository.getOne(category).getNews().add(aNew);</span>
+<span class="fc" id="L150">        }</span>
+<span class="fc" id="L151">    }</span>
 
     /**
      * Uutisen lisääminen. Kutsuu validaattoria tarkistamaan syötteet. Jos virheitä löytyy, palautetaan virheet takaisin
      * kontrolleriin. Muuten kutsutaan muita yksityisiä metodeja luomaan ja tallentamaan uutinen tietokantaan.
+     * @param session
      * @param title
      * @param ingress
      * @param text
@@ -162,70 +164,71 @@ import static org.thymeleaf.spring5.util.FieldUtils.errors;
      * @throws IOException
      */
     public List&lt;String&gt; addNews(HttpSession session, String title, String ingress, String text, List&lt;Long&gt; writers, List&lt;Long&gt; categories, MultipartFile img) throws IOException {
-<span class="fc" id="L165">        List&lt;String&gt; errors = newsValidator.runValidations(title, ingress, text, categories, writers, img);</span>
-<span class="fc bfc" id="L166" title="All 2 branches covered.">        if (session.getAttribute(&quot;user&quot;) == null) {</span>
-<span class="fc" id="L167">            errors.add(&quot;Et ole kirjautuneena!&quot;);</span>
-<span class="fc" id="L168">            return errors;</span>
+<span class="fc" id="L167">        List&lt;String&gt; errors = newsValidator.runValidations(title, ingress, text, categories, writers, img);</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (session.getAttribute(&quot;user&quot;) == null) {</span>
+<span class="fc" id="L169">            errors.add(&quot;Et ole kirjautuneena!&quot;);</span>
+<span class="fc" id="L170">            return errors;</span>
         }
-<span class="pc bpc" id="L170" title="1 of 2 branches missed.">        if (!errors.isEmpty()) {</span>
-<span class="nc" id="L171">            return errors;</span>
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">        if (!errors.isEmpty()) {</span>
+<span class="nc" id="L173">            return errors;</span>
         }
-<span class="fc" id="L173">        News aNew = setNewsAttributes(new News(), title, ingress, text);</span>
-<span class="fc" id="L174">        addToWritersAndCategories(aNew, writers, categories);</span>
-<span class="fc" id="L175">        newsRepository.save(aNew);</span>
-<span class="fc" id="L176">        createEntityOutOfImg(aNew, img);</span>
+<span class="fc" id="L175">        News aNew = setNewsAttributes(new News(), title, ingress, text);</span>
+<span class="fc" id="L176">        addToWritersAndCategories(aNew, writers, categories);</span>
+<span class="fc" id="L177">        newsRepository.save(aNew);</span>
+<span class="fc" id="L178">        createEntityOutOfImg(aNew, img);</span>
 
-<span class="fc" id="L178">        return errors;</span>
+<span class="fc" id="L180">        return errors;</span>
     }
 
     /**
      * Uutisen poistaminen. Kutsutaan muita metodeja poistamaan riippuvuudet uutiselta/uutiseen. Lopuksi poistetaan
      * uutinen tietokannasta.
+     * @param session
      * @param id
      * @return
      */
     public String deleteNews(HttpSession session, Long id) {
-<span class="fc bfc" id="L188" title="All 2 branches covered.">        if (session.getAttribute(&quot;user&quot;) == null) {</span>
-<span class="fc" id="L189">            return &quot;Et ole kirjautuneena!&quot;;</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">        if (session.getAttribute(&quot;user&quot;) == null) {</span>
+<span class="fc" id="L192">            return &quot;Et ole kirjautuneena!&quot;;</span>
         }
-<span class="fc" id="L191">        News aNew = newsRepository.getOne(id);</span>
-<span class="fc" id="L192">        String title = aNew.getTitle();</span>
-<span class="fc" id="L193">        deleteCategoryRelationsFromNews(aNew);</span>
-<span class="fc" id="L194">        deleteWriterRelationsFromNews(aNew);</span>
-<span class="pc bpc" id="L195" title="1 of 2 branches missed.">        for (View view : aNew.getViews()) {</span>
-<span class="nc" id="L196">            viewRepository.delete(view);</span>
-<span class="nc" id="L197">        }</span>
+<span class="fc" id="L194">        News aNew = newsRepository.getOne(id);</span>
+<span class="fc" id="L195">        String title = aNew.getTitle();</span>
+<span class="fc" id="L196">        deleteCategoryRelationsFromNews(aNew);</span>
+<span class="fc" id="L197">        deleteWriterRelationsFromNews(aNew);</span>
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">        for (View view : aNew.getViews()) {</span>
+<span class="nc" id="L199">            viewRepository.delete(view);</span>
+<span class="nc" id="L200">        }</span>
 
-<span class="fc" id="L199">        imageRepository.delete(imageRepository.findByNews(aNew));</span>
-<span class="fc" id="L200">        newsRepository.delete(aNew);</span>
-<span class="fc" id="L201">        return title;</span>
+<span class="fc" id="L202">        imageRepository.delete(imageRepository.findByNews(aNew));</span>
+<span class="fc" id="L203">        newsRepository.delete(aNew);</span>
+<span class="fc" id="L204">        return title;</span>
     }
 
     /**
      * Poistetaan uutisen riippuvuudet kategorioihin ja toisin päin.
      */
     private void deleteCategoryRelationsFromNews(News aNew) {
-<span class="fc bfc" id="L208" title="All 2 branches covered.">        for (Category category : aNew.getCategories()) {</span>
-<span class="fc" id="L209">            Category category2 = categoryRepository.getOne(category.getId());</span>
-<span class="fc" id="L210">            List&lt;News&gt; n = category2.getNews();</span>
-<span class="fc" id="L211">            n.remove(aNew);</span>
-<span class="fc" id="L212">            category2.setNews(n);</span>
-<span class="fc" id="L213">            categoryRepository.save(category2);</span>
-<span class="fc" id="L214">        }</span>
-<span class="fc" id="L215">    }</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">        for (Category category : aNew.getCategories()) {</span>
+<span class="fc" id="L212">            Category category2 = categoryRepository.getOne(category.getId());</span>
+<span class="fc" id="L213">            List&lt;News&gt; n = category2.getNews();</span>
+<span class="fc" id="L214">            n.remove(aNew);</span>
+<span class="fc" id="L215">            category2.setNews(n);</span>
+<span class="fc" id="L216">            categoryRepository.save(category2);</span>
+<span class="fc" id="L217">        }</span>
+<span class="fc" id="L218">    }</span>
 
     /**
      * Poistetaan uutisen riippuvuudet kirjoittajiin ja toisin päin.
      */
     private void deleteWriterRelationsFromNews(News aNew) {
-<span class="fc bfc" id="L221" title="All 2 branches covered.">        for (Writer writer : aNew.getWriters()) {</span>
-<span class="fc" id="L222">            Writer writer2 = writerRepository.getOne(writer.getId());</span>
-<span class="fc" id="L223">            List&lt;News&gt; n = writer2.getNews();</span>
-<span class="fc" id="L224">            n.remove(aNew);</span>
-<span class="fc" id="L225">            writer2.setNews(n);</span>
-<span class="fc" id="L226">            writerRepository.save(writer2);</span>
-<span class="fc" id="L227">        }</span>
-<span class="fc" id="L228">    }</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">        for (Writer writer : aNew.getWriters()) {</span>
+<span class="fc" id="L225">            Writer writer2 = writerRepository.getOne(writer.getId());</span>
+<span class="fc" id="L226">            List&lt;News&gt; n = writer2.getNews();</span>
+<span class="fc" id="L227">            n.remove(aNew);</span>
+<span class="fc" id="L228">            writer2.setNews(n);</span>
+<span class="fc" id="L229">            writerRepository.save(writer2);</span>
+<span class="fc" id="L230">        }</span>
+<span class="fc" id="L231">    }</span>
 
     /**
      * Lisätään redirectAttribuutille kentät, jotka sisältävät kaikki olemassaolevat kategoriat ja kirjoittajat.
@@ -233,9 +236,9 @@ import static org.thymeleaf.spring5.util.FieldUtils.errors;
      * @return
      */
     public RedirectAttributes addCategoriesAndWriters(RedirectAttributes redirectAttribute) {
-<span class="fc" id="L236">        redirectAttribute.addFlashAttribute(&quot;writers&quot;, writerRepository.findAll());</span>
-<span class="fc" id="L237">        redirectAttribute.addFlashAttribute(&quot;categories&quot;, categoryRepository.findAll());</span>
-<span class="fc" id="L238">        return redirectAttribute;</span>
+<span class="fc" id="L239">        redirectAttribute.addFlashAttribute(&quot;writers&quot;, writerRepository.findAll());</span>
+<span class="fc" id="L240">        redirectAttribute.addFlashAttribute(&quot;categories&quot;, categoryRepository.findAll());</span>
+<span class="fc" id="L241">        return redirectAttribute;</span>
     }
 
     /**
@@ -244,9 +247,9 @@ import static org.thymeleaf.spring5.util.FieldUtils.errors;
      * @return
      */
     public Model addCategoriesAndWriters(Model model) {
-<span class="fc" id="L247">        model.addAttribute(&quot;writers&quot;, writerRepository.findAll());</span>
-<span class="fc" id="L248">        model.addAttribute(&quot;categories&quot;, categoryRepository.findAll());</span>
-<span class="fc" id="L249">        return model;</span>
+<span class="fc" id="L250">        model.addAttribute(&quot;writers&quot;, writerRepository.findAll());</span>
+<span class="fc" id="L251">        model.addAttribute(&quot;categories&quot;, categoryRepository.findAll());</span>
+<span class="fc" id="L252">        return model;</span>
     }
 
     /**
@@ -256,8 +259,8 @@ import static org.thymeleaf.spring5.util.FieldUtils.errors;
      * @return
      */
     public Model addaNewToModel(Model model, Long id) {
-<span class="fc" id="L259">        model.addAttribute(&quot;aNew&quot;, newsRepository.getOne(id));</span>
-<span class="fc" id="L260">        return model;</span>
+<span class="fc" id="L262">        model.addAttribute(&quot;aNew&quot;, newsRepository.getOne(id));</span>
+<span class="fc" id="L263">        return model;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

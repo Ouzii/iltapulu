@@ -7,18 +7,36 @@ import laajaosk.wepa.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Palvelu hakutoiminnon logiikalle.
+ * @author oce
+ */
 @Service
-<span class="fc" id="L11">public class SearchService {</span>
+<span class="fc" id="L15">public class SearchService {</span>
 
     @Autowired
     private NewsRepository newsRepository;
     
-    
+    /**
+     * Hakee uutiset tietokannasta annetulla hakusanalla.
+     * @param searchWord
+     * @return
+     */
     public List&lt;News&gt; searchForNews(String searchWord) {
-<span class="fc" id="L18">        List&lt;News&gt; news = newsRepository.findByTitleContainingIgnoreCase(searchWord);</span>
-<span class="fc" id="L19">        news.addAll(newsRepository.findByIngressContainingIgnoreCase(searchWord));</span>
-<span class="fc" id="L20">        news.addAll(newsRepository.findByTextContainingIgnoreCase(searchWord));</span>
-<span class="fc" id="L21">        return news;</span>
+<span class="fc" id="L26">        List&lt;News&gt; news = newsRepository.findByTitleContainingIgnoreCase(searchWord);</span>
+<span class="fc" id="L27">        List&lt;News&gt; news2 = newsRepository.findByIngressContainingIgnoreCase(searchWord);</span>
+<span class="fc" id="L28">        List&lt;News&gt; news3 = newsRepository.findByTextContainingIgnoreCase(searchWord);</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        for (News aNew : news2) {</span>
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">            if (!news.contains(aNew)) {</span>
+<span class="fc" id="L31">                news.add(aNew);</span>
+            }
+<span class="fc" id="L33">        }</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        for (News aNew : news3) {</span>
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">            if (!news.contains(aNew)) {</span>
+<span class="fc" id="L36">                news.add(aNew);</span>
+            }
+<span class="fc" id="L38">        }</span>
+<span class="fc" id="L39">        return news;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
